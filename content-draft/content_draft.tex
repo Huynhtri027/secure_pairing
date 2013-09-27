@@ -1,0 +1,36 @@
+\documentclass{article}
+
+\title{Secure Pairing Methods for Mobile Devices}
+\date{\today}
+\author{Erik Boss, Max Hovens, Anton Jongsma, Aram Verstegen}
+
+\begin{document}
+\begin{abstract}
+\end{abstract}
+
+\section{Introduction}
+
+Device \textit{pairing} is the process of connecting two devices with mutual authentication which does not rely on an external trust anchor as is the case with traditional authentication.
+Mobile devices are an interesting field for research and development of secure pairing methods because they have relevant applications in practice.
+
+The focus of this research would be to investigate secure pairing methods for mobile devices in general.
+Furthermore, we shall endeavour to deliver a practical implementation of a secure pairing method on the Android platform.
+
+\section{Research Themes}
+Our preliminary literature study has suggested some interesting pairing methods, such as using GPS data to agree upon a route travelled as a shared secret; % TODO reference
+using front-facing camera's to have devices read each other's screens~\cite{saxena2006secure};
+using the balance sensors in two devices which are shaken about together in order to use the measurements as an agreed upon secret~\cite{mayrhofer2009shake}.
+
+\section{Approach for Practical Implementation}
+
+We have chosen the Google Android mobile device platform as it is accessible to new developers, more so than the Apple iOS platform.
+Coincidentally, Android devices are much more prevalent than iOS devices.
+
+\section{Literature}
+
+\bibliographystyle{plain}
+\bibliography{../references/references.bib}
+
+\end{document}
+
+% vim:tw=0:wrap
