@@ -1,4 +1,4 @@
-\documentclass[conference]{sty/IEEEtran}
+\documentclass[conference, 11pt]{sty/IEEEtran}
 
 \title{Secure Pairing}
 \author{Erik Boss \and Max Hovens \and Anton Jongsma \and Aram Verstegen}
@@ -17,6 +17,25 @@
 \section{Introduction}
 \label{sec:introduction}
 
+
+Device \textit{pairing} is the process of connecting two devices who have never seen each other before with mutual authentication which does not rely on an external trust anchor as is the case with traditional authentication.
+Accomplishing this in a correct and secure way in a mobile setting is an interesting problem.
+In particular, the obvious increase in devices using wireless signals makes the problem more relevant as it is often necessary to have these devices communicate securely with each other.
+How do we make sure that the devices know that they are communicating with the correct parties?
+How do we agree on keys?
+These problems are only exacerbated by the fact that often we are dealing with very constrained devices in terms of size and performance.
+Even if we do not necessarily have problems in terms of resources we can still have problems in terms of usability.
+For instance, on modern phones we have a great deal of resources in terms of performance.
+The dependence on, say, a PIN that needs to be remembered greatly hampers the technique from a usability point of view. 
+Passwords or PINs are forgotten all the time.
+
+In this paper we shall do a number of things.
+First, we shall provide a survey of techniques pertaining to what appears to be the state-of-the-art in secure pairing.
+We shall then proceed to briefly assess the state-of-the-art from both a security and a usability perspective.
+Furthermore, we shall strive to implement a secure pairing system between two mobile phones relying on QR-codes to set up a secure connection.
+This can serve as a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
+
+% Remove @ first real citation
 Placeholder~\cite{uzun2007usability}.
 
 \section{Conclusion}
@@ -26,3 +45,5 @@ Placeholder~\cite{uzun2007usability}.
 \bibliography{../references/references.bib}
 
 \end{document}
+
+% vim:tw=0:wrap
