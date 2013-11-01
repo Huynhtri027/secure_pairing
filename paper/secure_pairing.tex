@@ -35,8 +35,34 @@ We shall then proceed to briefly assess the state-of-the-art from both a securit
 Furthermore, we shall strive to implement a secure pairing system between two mobile phones relying on QR-codes to set up a secure connection.
 This can serve as a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
 
-% Remove @ first real citation
-Placeholder~\cite{uzun2007usability}.
+\section{Pairing methods}
+
+In this section we describe several pairing methods proposed in the literature.
+
+\subsection{Image comparing}
+An early approach to the problem of secure pairing involves image compairing.
+On both devices an image of the OOB data is shown and the user is asked to compare both images.
+Examples are \textit{Snowflake}\cite{goldberg1996visual}, \textit{Random Arts Visual Hash}\cite{perrig1999hash} and \textit{Colorful Flag}\cite{dohrmann2002public}.
+These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets. However, all modern smartphones have such a display.
+
+\subsection{Seeing is believing}
+In \cite{mccune2005seeing} camera phones use the \textit{visual channel} to transfer some information. In this method one device uses its camera to take a snapshot of a barcode encoding for example the public key of the other device. The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
+
+\subsection{Blinking lights}
+Related to \textit{Seeing is believing} is the \textit{Blinking lights} method.
+Instead of a display and a camera the devices in the method use a LED and a light-sensor or camera.
+The LED-equipped device transmits the authentication data by blinking the LED.
+The other device recovers the data by recording the blinking and looking at the inter-blink gaps.
+
+\subsection{Shake well before use}
+A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together to do the pairing.
+It matches features extracted from the sensor data to derive a cryptographic key.
+
+\section{Usability study}
+
+\section{Security study}
+
+\section{Implemenation}
 
 \section{Conclusion}
 \label{sec:conclusion}
