@@ -17,17 +17,23 @@
 \section{Introduction}
 \label{sec:introduction}
 
+The proliferation of devices, mobile or otherwise, communicating over wireless channels leads to interesting problems.
+In particular, the ease with which an adversary can eavesdrop said communication is rather astounding and thus a risk from a security point of view.
+The obvious solution is to, of course, attempt to secure this wireless channel.
+This is where \emph{secure device pairing} comes in.
 
-Device \textit{pairing} is the process of connecting two devices who have never seen each other before with mutual authentication which does not rely on an external trust anchor as is the case with traditional authentication.
-Accomplishing this in a correct and secure way in a mobile setting is an interesting problem.
-In particular, the obvious increase in devices using wireless signals makes the problem more relevant as it is often necessary to have these devices communicate securely with each other.
-How do we make sure that the devices know that they are communicating with the correct parties?
-How do we agree on keys?
-These problems are only exacerbated by the fact that often we are dealing with very constrained devices in terms of size and performance.
-Even if we do not necessarily have problems in terms of resources we can still have problems in terms of usability.
-For instance, on modern phones we have a great deal of resources in terms of performance.
-The dependence on, say, a PIN that needs to be remembered greatly hampers the technique from a usability point of view. 
-Passwords or PINs are forgotten all the time.
+Secure device pairing (or secure pairing, for short) is the process of creating a secure channel between two devices that have no previous security context.
+That is, a secure pairing scheme needs to be able to provide mutual authentication without relying on external trust anchors.
+Because we cannot rely on an external infrastructure as a basis of trust most of the standard techniques are not easily applicable.
+In particular, there is an often cited need to do some of the communication over an auxiliary channel, i.e., so-called out-of-band (OOB) channels.
+
+These OOB channels are managed by the users themselves and typically rely on human interaction to authenticate the communication over the wireless channel.
+Suppose we use human visual capabilities as an OOB channel, the idea is that this channel is very hard to interfere with for an attacker without the human user(s) noticing.
+There are many such OOB channels, some of which we shall discuss in subsequent sections in the paper.
+One problem with such channels is that they often rely on a certain common set of interfaces.
+However, interface-wise almost no two devices are alike and it is common for two very different devices to need a secure communication channel.
+For instance, a recent mobile phone might have a (virtual) keyboard, a camera and a smattering of sensors.
+A simple wireless bluetooth headset, however, likely has almost none of these things and is probably limited to just communicating over a wireless channel.
 
 In this paper we shall do a number of things.
 First, we shall provide a survey of techniques pertaining to what appears to be the state-of-the-art in secure pairing.
