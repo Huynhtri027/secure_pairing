@@ -5,6 +5,7 @@
 \date{\today}
 
 \usepackage{hyperref}
+\usepackage{amsmath, amssymb}
 
 \begin{document}
 
@@ -76,6 +77,17 @@ The initial proposal used infra-red signals as an OOB channel.
 Note, however, Infra-red as an OOB channel may not be as secure as one would like~\cite{kumar2009comparative}.
 The overall technique is broad enough to be useful for other OOB channels.
 
+\subsection{Short Authenticated Strings}
+\label{ssec:short_authenticated_strings}
+
+A \emph{Short Authenticated Strings} (SAS) protocol achieves mutual authentication, much like the previously discussed protocol.
+The main advantage is that the amount of data necessary for transfer over the OOB channel is fairly small.
+
+The protocol primarily utilizes commitment schemes in order to get an agreement on each other's public keys.
+The scheme, as denoted in~\cite{saxena2008automated} and~\cite{saxena2006secure} works by having two random values.
+One party, let us say Alice, commits to her random value which which, when opened by sending the decommit value, gives access to Alice's random value.
+In the meanwhile the other party has sent its random value in the clear to Alice.
+Both parties now communicate over an OOB channel in order to check if both parties have received the same random values.
 
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
