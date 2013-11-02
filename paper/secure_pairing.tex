@@ -48,6 +48,9 @@ We shall then proceed to briefly assess the state-of-the-art in secure device pa
 Furthermore, we shall strive to implement a secure pairing system between two mobile phones relying on QR-codes to set up a secure connection.
 This serves as a case study and a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
 
+\section{Cryptographic protocols for secure device pairing}
+\label{sec:cryptographic_protocols_for_secure_device_pairing}
+
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
 
@@ -60,7 +63,9 @@ Examples are \textit{Snowflake}\cite{goldberg1996visual}, \textit{Random Arts Vi
 These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets. However, all modern smartphones have such a display.
 
 \subsection{Seeing is believing}
-In \cite{mccune2005seeing} camera phones use the \textit{visual channel} to transfer some information. In this method one device uses its camera to take a snapshot of a barcode encoding for example the public key of the other device. The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
+In \cite{mccune2005seeing} camera phones use the \textit{visual channel} to transfer some information.
+In this method one device uses its camera to take a snapshot of a barcode encoding for example the public key of the other device.
+The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
 
 \subsection{Blinking lights}
 Related to \textit{Seeing is believing} is the \textit{Blinking lights} method.
