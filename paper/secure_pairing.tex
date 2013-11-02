@@ -149,14 +149,28 @@ We propose the following leakage assessment.
 	Infrared & High
 \end{tabular}
 
+Another factor at play in the security of pairing in practice is the length of the secret message that is agreed upon through the chosen channel, i.e. \emph{key length}.
+Since none of the techniques considered define a required minimal or maximal key length, this aspect does not relate to the pairing methods investigated.
+In effect, we are free to choose the strength of the used key independently of the chosen method of pairing.
 
 \subsection{Usability assessment}
 \label{ssec:usability_assessment}
+
+Prior research into the usability of the secure pairing methods found in the literature~\cite{kumar2009comparative} established the System Usability Score (SUS) for the considered pairing methods, as well as measuring the perceived security and the time and success rate to complete the task of pairing by observing a group of 22 test subjects interacting with test impelementations in a controlled environment.
+The results of this study show that of the methods considered in this summary, PIN and image comparison methods have the best scores in every category.
+Blinking lights takes the longest time to complete, has a relatively low SUS score and the lowest task completion rate.
+Seeing is Believing a relatively high task completion rate but on average takes a long time to complete.
+The established SUS score is about 50\% and the perceived security is about 60\%.
+Shake well before use was not considered in this usability study.
 
 \section{Design}
 \label{sec:implementation}
 
 TODO: We do not have an implementation just yet.
+We will sketch a preliminary design for a Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
+The proposed design will make use of 2D bar codes (specifically, QR codes) to transmit and receive information, and to this end the open source ZXING or ZBar Java libraries will be likely used.
+This communication channel will be used to do a Diffie-Hellman (DH) key exchange, which is converted to a PIN code to establish a conventional PIN-based Bluetooth connection pairing.
+The conversion will use a custom hash function that uses the binary data that was agreed upon out of band in a regular Simple Secure Pairing (SSP) for Bluetooth 2.1 and higher, or used to derive a PIN code for legacy Bluetooth device pairing.
 
 \subsection{Overview}
 \label{ssec:overview}
