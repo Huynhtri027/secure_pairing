@@ -97,23 +97,34 @@ In this section we describe several pairing methods proposed in the literature.
 \subsection{Image comparison}
 An early approach to the problem of secure pairing involves image comparison.
 On both devices an image of the OOB data is shown and the user is asked to compare both images.
+The underlying protocol is the one described in \autoref{ssec:talking_to_strangers}.
 Examples are \textit{Snowflake}\cite{goldberg1996visual}, \textit{Random Arts Visual Hash}\cite{perrig1999hash} and \textit{Colorful Flag}\cite{dohrmann2002public}.
-These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets. However, all modern smartphones have such a display.
+These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets.
+However, all modern smartphones have such a display and for that reason the technique is not without its uses.
 
-\subsection{Seeing is believing}
-In \cite{mccune2005seeing} camera phones use the \textit{visual channel} to transfer some information.
-In this method one device uses its camera to take a snapshot of a barcode encoding for example the public key of the other device.
+\subsection{Seeing is Believing}
+In \cite{mccune2005seeing} camera phones are used in order to use the \textit{visual channel} to transfer some information.
+In this method one device uses its camera to take a snapshot of a barcode encoding of, e.g., the public key of the other device.
 The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
 
 \subsection{Blinking lights}
-Related to \textit{Seeing is believing} is the \textit{Blinking lights} method.
+Related to \textit{Seeing is Believing} is the \textit{Blinking lights} method.
 Instead of a display and a camera the devices in the method use a LED and a light-sensor or camera.
 The LED-equipped device transmits the authentication data by blinking the LED.
-The other device recovers the data by recording the blinking and looking at the inter-blink gaps.
+The other device recovers the data by recording the blinking and looking at the gaps between distinct blinks.
 
 \subsection{Shake well before use}
-A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together to do the pairing.
+A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together in one hand to do the pairing.
+This is actually a very clever OOB channel, there really seems to be no way to eavesdrop with any effect on such a scheme.
+Also, shaking is a very distinctive gesture, making it relatively easy to derive measurements that can be mapped to bitstrings.
 It matches features extracted from the sensor data to derive a cryptographic key.
+
+It is also noted that while the shaking has sufficient entropy to be useful in key generation, its primary use is in key verification.
+That is, similar to the SAS protocol in \autoref{ssec:short_authenticated_strings} it may be more useful to just send regular randomly bytes to each other and \emph{then} verify that was done correctly by means of an OOB channel, in this case the shaking gesture.
+
+The feature extraction is a process that involves corrections for time alignment and spatial alignment before the data is usable at all.
+Indeed, it is easy to see that the particular way one holds both devices before shaking can lead to somewhat different measurements in each device.
+In particular, the time alignment is done through segmentation and the spatial alignment through normalization.
 
 \section{Assessment of the state-of-the-art}
 \label{sec:assessment_of_the_state_of_the_art}
