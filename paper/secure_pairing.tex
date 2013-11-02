@@ -1,4 +1,5 @@
 \documentclass[conference, 11pt]{sty/IEEEtran}
+% \documentclass[paper=a4, fontsize=10pt]{scrartcl}
 
 \title{Secure Pairing}
 \author{Erik Boss \and Max Hovens \and Anton Jongsma \and Aram Verstegen}
@@ -125,6 +126,58 @@ That is, similar to the SAS protocol in \autoref{ssec:short_authenticated_string
 The feature extraction is a process that involves corrections for time alignment and spatial alignment before the data is usable at all.
 Indeed, it is easy to see that the particular way one holds both devices before shaking can lead to somewhat different measurements in each device.
 In particular, the time alignment is done through segmentation and the spatial alignment through normalization.
+
+\subsection{Graphical passwords}
+\label{ssec:graphical_passwords}
+
+Graphical passwords are somewhat different from what we have seen so far.
+As the name implies it entails the entering of passwords in a graphical manner as opposed to the usual practice of entering PINs or alphanumeric passwords in general.
+The idea is that these graphical passwords can provide a similar level of security while being more memorable.
+Do note that these techniques do not necessarily use an OOB channel, they really are passwords in the more traditional sense, which is really what sets them apart from some of the other techniques discussed in this paper.
+
+In \cite{gajos2006exploring} five different types of graphical passwords are discussed: \emph{Pass-Go}, \emph{UYI}, \emph{TAPI}, \emph{CCP} and \emph{MIBA}.
+As an addition you might consider the Android gesture swipe unlocking scheme as a more recent example of such a system.
+However, that particular scheme suffers from problems in terms of predictability of patterns, lack of possibilities, easy should surfing and even smudge attacks~\cite{aviv2010smudge}.
+Whatever the case, the five techniques mentioned in \cite{gajos2006exploring} seem to cover quite a few different types of graphical passwords and we shall reproduce some of the descriptions with their respective characteristics here.
+
+\subsubsection{Pass-Go}
+\label{sssec:pass_go}
+
+Pass-Go entails the drawing dots and lines on a $n$-by-$n$ grid.
+The grid can be colored in such a way that the user is being given hints pertaining to the correct password.
+The size of $n$ primarily decides the security of the password, although $n$ does not really have to be very large.
+$n = 5$ was suggested for phones but since screen sizes have increased we believe that this can be increased proportionally.
+Also, the security can be enhanced by coloring the lines and dots differently.
+
+\subsubsection{UYI}
+\label{sssec:uyi}
+
+UYI is a simple scheme where the user has to pick a picture out of a number of distinct pictures.
+This is done several times in succession.
+Also, the pictures are presented in a somewhat abstracted version such that the user that set the key can recognize the picture but an adversary has a harder time.
+The amount of challenges and the amount of options determine the security of this scheme.
+Furthermore there must be a very large set of pictures to choose from.
+
+\subsubsection{TAPI}
+\label{sssec:tapi}
+
+TAPI is very similar to a regular PIN entry setup.
+It consists of a grid of 16 icons where each icon is split into four parts, this essentially gives you a PIN number pad with 64 possibilities as opposed to just ten.
+
+\subsubsection{CCP}
+\label{sssec:ccp}
+
+CCP entails presenting the user with subsequent pictures where the user must click on a certain point in said image. 
+Depending on the particular point being clicked on we get a different subsequent picture.
+The password then is just a sequence of pictures with their respective correct click points.
+If the user clicks on the wrong point a different image is presented than expected and thus this serves as a kind of feedback to the user.
+
+\subsubsection{MIBA}
+\label{sssec:miba}
+
+This scheme is very similar to CCP but with the addition of several new features.
+For one, it has a grid overlay to help the user with selecting click points.
+Also, the differentiation between long and short presses on a given point can lead to different passwords in this scheme which aids in improving the password space.
 
 \section{Assessment of the state-of-the-art}
 \label{sec:assessment_of_the_state_of_the_art}
