@@ -186,7 +186,7 @@ It consists of a grid of 16 icons where each icon is split into four parts, this
 \subsubsection{CCP}
 \label{sssec:ccp}
 
-CCP entails presenting the user with subsequent pictures where the user must click on a certain point in said image. 
+CCP entails presenting the user with subsequent pictures where the user must click on a certain point in said image.
 Depending on the particular point being clicked on we get a different subsequent picture.
 The password then is just a sequence of pictures with their respective correct click points.
 If the user clicks on the wrong point a different image is presented than expected and thus this serves as a kind of feedback to the user.
@@ -217,8 +217,9 @@ We propose the following leakage assessment.
 	Shake well before use & Low \\
 	Seeing is Believing & Low \\
 	Image comparison & Medium \\
- Blinking Lights & Medium \\ 
-	Infrared & High
+     Blinking Lights & Medium \\
+	Infrared & High \\
+	Graphical passwords & Low \\
 \end{tabular}
 
 Another factor at play in the security of pairing in practice is the length of the secret message that is agreed upon through the chosen channel, i.e. \emph{key length}.
@@ -234,6 +235,9 @@ Blinking lights takes the longest time to complete, has a relatively low SUS sco
 Seeing is Believing a relatively high task completion rate but on average takes a long time to complete.
 The established SUS score is about 50\% and the perceived security is about 60\%.
 Shake well before use was not considered in this usability study.
+
+In a similar study \cite{kumar2009comparative} some of the same authors identify the resistance of pairing methods against so-called \textit{rushing user} behaviour.
+They identify the distinction between Device Controlled (DC) and User Controlled (UC) pairing methods and observe that the UC pairing methods are more succeptible to the \textit{rushing user} behavior.
 
 \section{Design}
 \label{sec:implementation}
