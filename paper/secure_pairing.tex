@@ -5,13 +5,14 @@
 \date{\today}
 
 \usepackage{hyperref}
+\usepackage{amsmath, amssymb}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-    
+    TODO: Will be written after everything is finished.
 \end{abstract}
 
 \section{Introduction}
@@ -36,35 +37,94 @@ However, interface-wise almost no two devices are alike and it is common for two
 For instance, a recent mobile phone might have a (virtual) keyboard, a camera and a smattering of sensors.
 A simple wireless bluetooth headset, however, likely has almost none of these things and is probably limited to just communicating over a wireless channel.
 
-In this paper we shall do a number of things.
-First, we shall provide a survey of techniques pertaining to what appears to be the state-of-the-art in secure pairing.
-We shall then proceed to briefly assess the state-of-the-art from both a security and a usability perspective.
+There are two elements to a secure pairing scheme.
+In essence, we have the content and the method of pairing.
+The content entails the messages sent, i.e., the protocol; the method entails the way in which certain interfaces are used in order to use the protocol.
+Most of our focus will be on the latter, since the protocols are typically not very complex.
+We will, however, mention some of the ways in which the information can be sent.
+
+We structure our paper as follows.
+First, we shall provide a survey of techniques pertaining to what appears to be the state-of-the-art in secure pairing with regards to both the content and the method of pairing.
+We shall then proceed to briefly assess the state-of-the-art in secure device pairing from both a security and a usability perspective.
 Furthermore, we shall strive to implement a secure pairing system between two mobile phones relying on QR-codes to set up a secure connection.
-This can serve as a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
+This serves as a case study and a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
+
+\section{Cryptographic protocols for secure device pairing}
+\label{sec:cryptographic_protocols_for_secure_device_pairing}
+
+In this section we shall discuss a few general ways of accomplishing the authentication of two devices assuming a suitable OOB channel is in place.
+The idea is that these protocols can determine the content of the information being exchanged without relying too much on the particular channel.
+Again, this the separation between the content and the method (or representation) of the secure pairing technique.
+Note, however, that this does not mean that every, or even most, of the techniques described in the next section use one of these protocols.
+Many of those exploit particular characteristics of their respective representations or OOB channels.
+
+\subsection{Talking to Strangers}
+\label{ssec:talking_to_strangers}
+
+A fairly old method, it describes a system~\cite{balfanz2002talking} that relies on a suitable OOB channel in order to transmit pre-authentication data after which standard protocols can be implemented.
+Specifically, each party sends their public key over the normal wireless channel and a hash of said public key over the OOB channel.
+
+More formally, the pre-authentication looks as follows given addresses $addr_A$ and $addr_B$ for parties $A$ and $B$, their respective public keys $pk_A$ and $pk_B$ and a collision resistant hash function $h$:
+
+\begin{enumerate}
+    \item $A \rightarrow B: addr_A, h(pk_A)$
+    \item $B \rightarrow A: addr_B, h(pk_B)$
+\end{enumerate}
+
+After which we can proceed with a standard key exchange protocol.
+
+The initial proposal used infra-red signals as an OOB channel.
+Note, however, Infra-red as an OOB channel may not be as secure as one would like~\cite{kumar2009comparative}.
+The overall technique is broad enough to be useful for other OOB channels.
+
+\subsection{Short Authenticated Strings}
+\label{ssec:short_authenticated_strings}
+
+A \emph{Short Authenticated Strings} (SAS) protocol achieves mutual authentication, much like the previously discussed protocol.
+The main advantage is that the amount of data necessary for transfer over the OOB channel is fairly small.
+
+The protocol primarily utilizes commitment schemes in order to get an agreement on each other's public keys.
+The scheme, as denoted in~\cite{saxena2008automated} and~\cite{saxena2006secure} works by having two random values.
+One party, let us say Alice, commits to her random value which which, when opened by sending the decommit value, gives access to Alice's random value.
+In the meanwhile the other party has sent its random value in the clear to Alice.
+Both parties now communicate over an OOB channel in order to check if both parties have received the same random values.
 
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
 
 In this section we describe several pairing methods proposed in the literature.
 
-\subsection{Image comparing}
-An early approach to the problem of secure pairing involves image compairing.
+\subsection{Image comparison}
+An early approach to the problem of secure pairing involves image comparison.
 On both devices an image of the OOB data is shown and the user is asked to compare both images.
+The underlying protocol is the one described in \autoref{ssec:talking_to_strangers}.
 Examples are \textit{Snowflake}\cite{goldberg1996visual}, \textit{Random Arts Visual Hash}\cite{perrig1999hash} and \textit{Colorful Flag}\cite{dohrmann2002public}.
-These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets. However, all modern smartphones have such a display.
+These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets.
+However, all modern smartphones have such a display and for that reason the technique is not without its uses.
 
-\subsection{Seeing is believing}
-In \cite{mccune2005seeing} camera phones use the \textit{visual channel} to transfer some information. In this method one device uses its camera to take a snapshot of a barcode encoding for example the public key of the other device. The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
+\subsection{Seeing is Believing}
+In \cite{mccune2005seeing} camera phones are used in order to use the \textit{visual channel} to transfer some information.
+In this method one device uses its camera to take a snapshot of a barcode encoding of, e.g., the public key of the other device.
+The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
 
 \subsection{Blinking lights}
-Related to \textit{Seeing is believing} is the \textit{Blinking lights} method.
+Related to \textit{Seeing is Believing} is the \textit{Blinking lights} method.
 Instead of a display and a camera the devices in the method use a LED and a light-sensor or camera.
 The LED-equipped device transmits the authentication data by blinking the LED.
-The other device recovers the data by recording the blinking and looking at the inter-blink gaps.
+The other device recovers the data by recording the blinking and looking at the gaps between distinct blinks.
 
 \subsection{Shake well before use}
-A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together to do the pairing.
+A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together in one hand to do the pairing.
+This is actually a very clever OOB channel, there really seems to be no way to eavesdrop with any effect on such a scheme.
+Also, shaking is a very distinctive gesture, making it relatively easy to derive measurements that can be mapped to bitstrings.
 It matches features extracted from the sensor data to derive a cryptographic key.
+
+It is also noted that while the shaking has sufficient entropy to be useful in key generation, its primary use is in key verification.
+That is, similar to the SAS protocol in \autoref{ssec:short_authenticated_strings} it may be more useful to just send regular randomly bytes to each other and \emph{then} verify that was done correctly by means of an OOB channel, in this case the shaking gesture.
+
+The feature extraction is a process that involves corrections for time alignment and spatial alignment before the data is usable at all.
+Indeed, it is easy to see that the particular way one holds both devices before shaking can lead to somewhat different measurements in each device.
+In particular, the time alignment is done through segmentation and the spatial alignment through normalization.
 
 \section{Assessment of the state-of-the-art}
 \label{sec:assessment_of_the_state_of_the_art}
@@ -78,11 +138,17 @@ It matches features extracted from the sensor data to derive a cryptographic key
 \section{Implementation}
 \label{sec:implementation}
 
+TODO: We do not have an implementation just yet.
+
 \subsection{Overview}
 \label{ssec:overview}
 
+TODO: We need an implementation first.
+
 \section{Conclusion}
 \label{sec:conclusion}
+
+TODO: To be done after the implementation section is finished.
 
 \bibliographystyle{plain}
 \bibliography{../references/references.bib}
