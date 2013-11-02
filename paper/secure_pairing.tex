@@ -209,7 +209,19 @@ In this section we summarize our assessments of the security and usability of di
 In the literature there is no known set of criteria by which to evaluate secure pairing methods.
 Secure pairing methods are most at risk from a Man-in-the-middle (MITM) attack, whereby an observer may actively or passively intercept (or possibly relay and modify) the communication between devices, which would defeat the desired goal of establishing a secure channel.
 This risk, in our view, can be directly quantified in terms of the leakage of communication channels used.
-We propose the following leakage assessment.
+
+Our considerations for these assessments are as follows:
+%\begin{itemize}
+The shaking of two phones can incurr subtle signals to the accelerometers of the mobile devices, which is hard to observe without having access to the accelerometer data of a device that went through the same shaking pattern.
+Using a high-speed camera or similar visual observation of the pairing process does not reveal these subtle signals to an observer.
+Graphical passwords may be observed by an outside attacker, the different methods within this category may be vulnerable to a straightforward replay attack while others may be randomized and require several observations before the entire secret is recovered.
+Image comparison is vulnerable to the same kind of observation, but the observed information may only be used in one and the same session and is thus not transferable to a straightforward replay attack.
+Blinking lights are similarly vulnerable to eavesdropping by an observer, since the light emitted by LED diodes is very bright in a certain light spectrum band, which can be clearly observed at a distance.
+Infrared LEDs exhibit the same problem to a worse degree.
+HAPADEP makes use of audio signals, and is therefore susceptible to eavesdropping by conventional surveillance methods.
+Observing a Seeing is Believing pairing may similarly reveal the secret information that is communicated, but depending on whether this is user-controlled or device-controlled, these signals may transmit information with a comparatively high bandwidth, so that observation is the least practical from the class of pairing methods susceptible to observation.
+
+In conclusion, we propose the following leakage assessment.
 
 \begin{tabular}{c|c}
 	Technique & Leakage \\
@@ -222,6 +234,9 @@ We propose the following leakage assessment.
      HAPADEP & Medium \\
 	Infrared & High \\
 \end{tabular}
+
+
+%\end{itemize}
 
 Another factor at play in the security of pairing in practice is the length of the secret message that is agreed upon through the chosen channel, i.e. \emph{key length}.
 Since none of the techniques considered define a required minimal or maximal key length, this aspect does not relate to the pairing methods investigated.
