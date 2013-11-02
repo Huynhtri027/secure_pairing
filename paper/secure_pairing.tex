@@ -127,6 +127,25 @@ The feature extraction is a process that involves corrections for time alignment
 Indeed, it is easy to see that the particular way one holds both devices before shaking can lead to somewhat different measurements in each device.
 In particular, the time alignment is done through segmentation and the spatial alignment through normalization.
 
+\subsection{Loud and Clear}
+\label{ssec:loud_and_clear}
+
+Loud and clear~\cite{goodrich2006loud} is a technique that uses audio as an OOB channel.
+The underlying protocol is the same as in \autoref{ssec:talking_to_strangers}.
+It works by vocalizing, using a specialized text-to-speech engine, authentication strings into syntactically correct English sentences.
+
+Two modes are possible, speaker-speaker mode and speaker-display mode.
+They require the user to respectively compare two vocalized strings or compare the vocalized string with a textual representation of such a string.
+
+\subsection{HAPADEP}
+\label{ssec:hapadep}
+
+Similar to Loud-and-Clear, HAPADEP~\cite{soriente2008hapadep} utilizes sound in order to get a pairing.
+Its intended use is in situations where one may not have an available wireless connection.
+It can use the audio channel for all messages instead.
+That said, it can also be used in such a way that only some messages are sent using this audio channel, everything else can go via wireless.
+
+
 \subsection{Graphical passwords}
 \label{ssec:graphical_passwords}
 
