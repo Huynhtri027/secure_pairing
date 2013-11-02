@@ -13,7 +13,7 @@
 \maketitle
 
 \begin{abstract}
-    TODO: Will be written after everything is finished.
+    TODO: Will be written after everything is finished. Such is the nature of abstracts.
 \end{abstract}
 
 \section{Introduction}
@@ -52,6 +52,8 @@ This serves as a case study and a convenient platform for discussing the securit
 
 \section{Cryptographic protocols for secure device pairing}
 \label{sec:cryptographic_protocols_for_secure_device_pairing}
+
+TODO: Add more details perhaps (maybe a picture?).
 
 In this section we shall discuss a few general ways of accomplishing the authentication of two devices assuming a suitable OOB channel is in place.
 The idea is that these protocols can determine the content of the information being exchanged without relying too much on the particular channel.
@@ -92,6 +94,8 @@ Both parties now communicate over an OOB channel in order to check if both parti
 
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
+
+TODO: Extend the explanations and add a few more techniques.
 
 In this section we describe several pairing methods proposed in the literature.
 
@@ -206,6 +210,8 @@ In this section we summarize our assessments of the security and usability of di
 \subsection{Security assessment}
 \label{ssec:security_assessment}
 
+TODO: Add assessments of different security properties.
+
 In the literature there is no known set of criteria by which to evaluate secure pairing methods.
 Secure pairing methods are most at risk from a Man-in-the-middle (MITM) attack, whereby an observer may actively or passively intercept (or possibly relay and modify) the communication between devices, which would defeat the desired goal of establishing a secure channel.
 This risk, in our view, can be directly quantified in terms of the leakage of communication channels used.
@@ -245,6 +251,8 @@ In effect, we are free to choose the strength of the used key independently of t
 \subsection{Usability assessment}
 \label{ssec:usability_assessment}
 
+TODO: Extend explanations and add more different usability properties.
+
 Prior research into the usability of the secure pairing methods found in the literature~\cite{kumar2009comparative} established the System Usability Score (SUS) for the considered pairing methods, as well as measuring the perceived security and the time and success rate to complete the task of pairing by observing a group of 22 test subjects interacting with test impelementations in a controlled environment.
 The results of this study show that of the methods considered in this summary, PIN and image comparison methods have the best scores in every category.
 Blinking lights takes the longest time to complete, has a relatively low SUS score and the lowest task completion rate.
@@ -256,7 +264,7 @@ In a similar study \cite{kobsa2009serial} some of the same authors identify the 
 They identify the distinction between Device Controlled (DC) and User Controlled (UC) pairing methods and observe that the UC pairing methods are more succeptible to the \textit{rushing user} behavior.
 
 \section{Design}
-\label{sec:implementation}
+\label{sec:design}
 
 TODO: We do not have an implementation just yet.
 We will sketch a preliminary design for a Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
