@@ -51,6 +51,32 @@ This serves as a case study and a convenient platform for discussing the securit
 \section{Cryptographic protocols for secure device pairing}
 \label{sec:cryptographic_protocols_for_secure_device_pairing}
 
+In this section we shall discuss a few general ways of accomplishing the authentication of two devices assuming a suitable OOB channel is in place.
+The idea is that these protocols can determine the content of the information being exchanged without relying too much on the particular channel.
+Again, this the separation between the content and the method (or representation) of the secure pairing technique.
+Note, however, that this does not mean that every, or even most, of the techniques described in the next section use one of these protocols.
+Many of those exploit particular characteristics of their respective representations or OOB channels.
+
+\subsection{Talking to Strangers}
+\label{ssec:talking_to_strangers}
+
+A fairly old method, it describes a system~\cite{balfanz2002talking} that relies on a suitable OOB channel in order to transmit pre-authentication data after which standard protocols can be implemented.
+Specifically, each party sends their public key over the normal wireless channel and a hash of said public key over the OOB channel.
+
+More formally, the pre-authentication looks as follows given addresses $addr_A$ and $addr_B$ for parties $A$ and $B$, their respective public keys $pk_A$ and $pk_B$ and a collision resistant hash function $h$:
+
+\begin{enumerate}
+    \item $A \rightarrow B: addr_A, h(pk_A)$
+    \item $B \rightarrow A: addr_B, h(pk_B)$
+\end{enumerate}
+
+After which we can proceed with a standard key exchange protocol.
+
+The initial proposal used infra-red signals as an OOB channel.
+Note, however, Infra-red as an OOB channel may not be as secure as one would like~\cite{kumar2009comparative}.
+The overall technique is broad enough to be useful for other OOB channels.
+
+
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
 
