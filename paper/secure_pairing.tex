@@ -182,13 +182,31 @@ Also, the differentiation between long and short presses on a given point can le
 \section{Assessment of the state-of-the-art}
 \label{sec:assessment_of_the_state_of_the_art}
 
+In this section we summarize our assessments of the security and usability of different pairing methods.
+
 \subsection{Security assessment}
 \label{ssec:security_assessment}
+
+In the literature there is no known set of criteria by which to evaluate secure pairing methods.
+Secure pairing methods are most at risk from a Man-in-the-middle (MITM) attack, whereby an observer may actively or passively intercept (or possibly relay and modify) the communication between devices, which would defeat the desired goal of establishing a secure channel.
+This risk, in our view, can be directly quantified in terms of the leakage of communication channels used.
+We propose the following leakage assessment.
+
+\begin{tabular}{c|c}
+	Technique & Leakage \\
+	\hline
+	Shake well before use & Low \\
+	Seeing is Believing & Low \\
+	Image comparison & Medium \\
+ Blinking Lights & Medium \\ 
+	Infrared & High
+\end{tabular}
+
 
 \subsection{Usability assessment}
 \label{ssec:usability_assessment}
 
-\section{Implementation}
+\section{Design}
 \label{sec:implementation}
 
 TODO: We do not have an implementation just yet.
