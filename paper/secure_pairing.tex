@@ -36,19 +36,25 @@ However, interface-wise almost no two devices are alike and it is common for two
 For instance, a recent mobile phone might have a (virtual) keyboard, a camera and a smattering of sensors.
 A simple wireless bluetooth headset, however, likely has almost none of these things and is probably limited to just communicating over a wireless channel.
 
-In this paper we shall do a number of things.
-First, we shall provide a survey of techniques pertaining to what appears to be the state-of-the-art in secure pairing.
-We shall then proceed to briefly assess the state-of-the-art from both a security and a usability perspective.
+There are two elements to a secure pairing scheme.
+In essence, we have the content and the method of pairing.
+The content entails the messages sent, i.e., the protocol; the method entails the way in which certain interfaces are used in order to use the protocol.
+Most of our focus will be on the latter, since the protocols are typically not very complex.
+We will, however, mention some of the ways in which the information can be sent.
+
+We structure our paper as follows.
+First, we shall provide a survey of techniques pertaining to what appears to be the state-of-the-art in secure pairing with regards to both the content and the method of pairing.
+We shall then proceed to briefly assess the state-of-the-art in secure device pairing from both a security and a usability perspective.
 Furthermore, we shall strive to implement a secure pairing system between two mobile phones relying on QR-codes to set up a secure connection.
-This can serve as a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
+This serves as a case study and a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
 
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
 
 In this section we describe several pairing methods proposed in the literature.
 
-\subsection{Image comparing}
-An early approach to the problem of secure pairing involves image compairing.
+\subsection{Image comparison}
+An early approach to the problem of secure pairing involves image comparison.
 On both devices an image of the OOB data is shown and the user is asked to compare both images.
 Examples are \textit{Snowflake}\cite{goldberg1996visual}, \textit{Random Arts Visual Hash}\cite{perrig1999hash} and \textit{Colorful Flag}\cite{dohrmann2002public}.
 These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets. However, all modern smartphones have such a display.
