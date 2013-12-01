@@ -342,6 +342,7 @@ In this section we summarize our assessments of the classification, security and
 \subsection{Classification}
 A fine-grained classification of pairing methods is available in the research literature~\cite{chong2012usability}, but these considerations are mostly contextual and to a large extent outside the scope of our specific interests of usability and security.
 We can broadly classify the pairing methods we reviewed into categories \emph{human-assisted channel}, \emph{device-controlled channel} and \emph{sensor synchronisation}.
+In the cases where humans assist in forming the channel we can further divide between \textit{compare \& confirm} and \textit{compare \& select} approaches.
 
 % table squishing
 %\hspace{-3em}
@@ -437,7 +438,10 @@ Its established SUS score is about 50\% and the perceived security is about 60\%
 In a similar study \cite{kobsa2009serial} some of the same authors establish the resistance of pairing methods against so-called \textit{rushing user} behaviour.
 The authors also recognize the distinction between device-controlled and user-assisted channels for pairing and concluded that the user-assisted pairing methods are more susceptible to the \textit{rushing user} behavior.
 
-\subsubsection{}
+\subsubsection{Security failures VS non-security failures}
+Another source on usability assessment contrasts usability and security directly~\cite{kainda2009usability} by measuring the number of failed pairing attempts using user-assisted out-of-band channels for \textit{comparing} and then \textit{selecting} or \textit{confirming} OOB data using mnemonics like numbers, alphanumeric strings, words and sentences in natural language, images, melodies and combinations thereof.
+They conclude that neither method is suitable for secure and usable human-assisted OOB channels, but that \textit{copying} the data provided good results in both aspects.
+The article concludes expressing interest in another option: using barcodes.
 
 \section{Design}
 \label{sec:design}
