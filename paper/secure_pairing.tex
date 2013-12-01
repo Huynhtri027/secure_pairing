@@ -1,4 +1,4 @@
-\documentclass[conference, 12pt]{sty/IEEEtran}
+\documentclass[conference, 11pt]{sty/IEEEtran}
 % \documentclass[paper=a4, fontsize=11pt]{scrartcl}
 
 \title{Secure Pairing}
@@ -154,7 +154,6 @@ However, these have slightly weaker security guarantees~\cite{saxena2008automate
 
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
-%TODO: Extend the explanations and add a few more techniques.
 
 In this section we describe several pairing methods proposed in the literature.
 We can distinguish different kinds of secure pairing methods.
@@ -206,7 +205,7 @@ Of course, we need both sides to be able to authenticate to do mutual authentica
 % The minimum set of interfaces for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
 
 \subsection{Blinking lights}
-Related to \textit{Seeing is Believing} is the \textit{Blinking lights} method.
+Related to \textit{Seeing is Believing} is the \textit{Blinking lights}~\cite{saxena2006secure} method.
 Instead of a display and a camera the devices in the method use a LED and a light-sensor or camera.
 The LED-equipped device transmits the authentication data by blinking the LED.
 The other device recovers the data by recording the blinking and looking at the gaps between distinct blinks.
