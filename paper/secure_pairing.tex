@@ -157,8 +157,9 @@ However, these have slightly weaker security guarantees~\cite{saxena2008automate
 
 In this section we describe several pairing methods proposed in the literature.
 We can distinguish different kinds of secure pairing methods.
-Mostly, they differ in the amount of human intervention necessary.
+Mostly, they differ in the amount of human intervention necessary and the OOB channels they use.
 Some require only some preliminary setup from the user, others require the user to participate and other ones do not require user intervention at all.
+The OOB channels can vary, but some manifestation of the visual channel seems to be the most popular choice.
 
 
 \subsection{Image comparison}
@@ -170,7 +171,7 @@ These methods require both devices to have a display with a reasonable resolutio
 However, all modern smartphones have such a display and for that reason the technique is not without its merits.
 
 \subsection{Seeing is Believing}
-In Seeing-is-Believing (SIB)~\cite{mccune2005seeing} camera phones are used to set up a pairing between two devices.
+In Seeing-is-Believing (SiB)~\cite{mccune2005seeing} camera phones are used to set up a pairing between two devices.
 Given at least one device with a camera we can make sure that this device is communicating with the device we look at through the camera.
 The device with a camera takes a snapshot of the barcode encoding of relevant cryptographic data, for instance the data in one of the protocols in \autoref{sec:cryptographic_protocols_for_secure_device_pairing}.
 The cryptographic data is then used to bootstrap a secure connection between the two devices.
@@ -200,15 +201,43 @@ There are a few more combinations of interfaces to be examined and for the sake 
 
 Of course, we need both sides to be able to authenticate to do mutual authentication, i.e., the CD - CD combination.
 
+\subsection{VIC}
+\label{ssec:vic}
+
+VIC~\cite{saxena2006secure}, or Visual authentication based on Integrity Checking, is meant as an upgrade to SiB, which we saw in the last section.
+Recall that we noted that mutual authentication is only possible in SiB when both devices are equipped with cameras and displays (see \autoref{table:sib}).
+In VIC we achieve mutual authentication even in the cases where SiB could only give one \emph{presence}.
+However, we do need an additional step of user interaction.
+VIC works as follows, where $h$ is a hash function and $K_A, K_B$ are A's and B's public keys respectively:
+
+\begin{enumerate}
+    \item $A \rightarrow B: K_A$
+    \item $B \rightarrow A: K_B$
+    \item $A: h_A \gets h(K_A \| K_B)$
+    \item $B: h_B \gets h(K_A \| K_B)$
+    \item $A \rightarrow B(\text{visual}): h_A$
+    \item $B$: compare $h_A$ and $h_B$, if they match $B$ indicates acceptance to the user, reject and abort otherwise.
+    \item $A$: prompt the user as to whether $B$ accepted or not. $A$ accepts if the user indicated that $B$ accepted, reject and abort otherwise.
+\end{enumerate}
+
+It is not hard to see that indeed this provides mutual authentication even in the camera-display scenario.
 
 % In this method one device uses its camera to take a snapshot of a barcode encoding of, for example, the public key of the other device.
 % The minimum set of interfaces for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
 
 \subsection{Blinking lights}
-Related to \textit{Seeing is Believing} is the \textit{Blinking lights}~\cite{saxena2006secure} method.
+Related to \textit{Seeing is Believing} and VIC is the \textit{Blinking lights}~\cite{saxena2006secure} method.
 Instead of a display and a camera the devices in the method use a LED and a light-sensor or camera.
 The LED-equipped device transmits the authentication data by blinking the LED.
 The other device recovers the data by recording the blinking and looking at the gaps between distinct blinks.
+The actual protocol is the same as in \autoref{ssec:vic}.
+
+In \emph{Blinking Lights} we represent a short gap between blinks as a '0' and long gaps as '1', the complete authentication data is then just a bitstring of binary representations of these gaps.
+Since we cannot know when a receiver starts receiving the transmitter has to repeat the message over and over.
+Indeed, the fact that we only have a unidirectional channel (LED to camera) does not allow to indicate that the receiver started receiving.
+Moreover, we cannot know at which point in the transmitted data we start receiving.
+This requires the receiver to accept any of the bit rotations of the expected value.
+So for the expected bitstring $n$ we accept $n$ possible bitstrings.
 
 \subsection{Shake well before use}
 A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together in one hand to do the pairing.
@@ -360,6 +389,7 @@ We use three metrics, namely: the estimated \emph{leakage} in terms of the radiu
 	Technique & Leakage radius & Crypto & Signal complexity \\
 	\hline
 	  Seeing is Believing & Low & Yes & High \\
+	  VIC & Low & Yes & High \\
 	Shake well before use & Low & Yes & High \\
     	  Graphical passwords & Low & No & Medium \\
   Blinking Lights & Medium & Yes & High \\
