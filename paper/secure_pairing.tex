@@ -129,6 +129,7 @@ To fix this, both parties compute the XOR of the random values they received and
 Both parties then just check whether the values are the same.
 
 \begin{figure*}
+    \centering
 \[
 \begin{array}{c c c}
     \text{A} & & \text{B}  \\
@@ -291,15 +292,15 @@ As the name implies it entails the entering of passwords in a graphical manner a
 The idea is that these graphical passwords can provide a similar level of security while being more memorable.
 Do note that these techniques do not necessarily use an OOB channel, they really are passwords in the more traditional sense, which is really what sets them apart from some of the other techniques discussed in this paper.
 
-In \cite{gajos2006exploring} five different types of graphical passwords are discussed: \emph{Pass-Go}, \emph{UYI}, \emph{TAPI}, \emph{CCP} and \emph{MIBA}.
+In \cite{schaub2013exploring} five different types of graphical passwords are discussed: \emph{Pass-Go}, \emph{UYI}, \emph{TAPI}, \emph{CCP} and \emph{MIBA}.
 As an addition you might consider the Android gesture swipe unlocking scheme as a more recent example of such a system.
 However, that particular scheme suffers from problems in terms of predictability of patterns, lack of possibilities, easy should surfing and even smudge attacks~\cite{aviv2010smudge}.
-Whatever the case, the five techniques mentioned in \cite{gajos2006exploring} seem to cover quite a few different types of graphical passwords and we shall reproduce some of the descriptions with their respective characteristics here.
+Whatever the case, the five techniques mentioned in \cite{schaub2013exploring} seem to cover quite a few different types of graphical passwords and we shall reproduce some of the descriptions with their respective characteristics here.
 
 \subsubsection{Pass-Go}
 \label{sssec:pass_go}
 
-Pass-Go entails the drawing dots and lines on a $n$-by-$n$ grid.
+Pass-Go~\cite{tao2008pass} entails the drawing of dots and lines on a $n$-by-$n$ grid.
 The grid can be colored in such a way that the user is being given hints pertaining to the correct password.
 The size of $n$ primarily decides the security of the password, although $n$ does not really have to be very large.
 $n = 5$ was suggested for phones but since screen sizes have increased we believe that this can be increased proportionally.
@@ -308,22 +309,23 @@ Also, the security can be enhanced by coloring the lines and dots differently.
 \subsubsection{UYI}
 \label{sssec:uyi}
 
-UYI is a simple scheme where the user has to pick a picture out of a number of distinct pictures.
+UYI~\cite{hayashi2008use} is a simple scheme where the user has to pick a picture out of a number of distinct pictures.
 This is done several times in succession.
 Also, the pictures are presented in a somewhat abstracted version such that the user that set the key can recognize the picture but an adversary has a harder time.
 The amount of challenges and the amount of options determine the security of this scheme.
 Furthermore there must be a very large set of pictures to choose from.
 
+
 \subsubsection{TAPI}
 \label{sssec:tapi}
 
-TAPI is very similar to a regular PIN entry setup.
+TAPI~\cite{citty2010tapi} is very similar to a regular PIN entry setup.
 It consists of a grid of 16 icons where each icon is split into four parts, this essentially gives you a PIN number pad with 64 possibilities as opposed to just ten.
 
 \subsubsection{CCP}
 \label{sssec:ccp}
 
-CCP entails presenting the user with subsequent pictures where the user must click on a certain point in said image.
+CCP~\cite{chiasson2007graphical} entails presenting the user with subsequent pictures where the user must click on a certain point in said image.
 Depending on the particular point being clicked on we get a different subsequent picture.
 The password then is just a sequence of pictures with their respective correct click points.
 If the user clicks on the wrong point a different image is presented than expected and thus this serves as a kind of feedback to the user.
@@ -331,9 +333,37 @@ If the user clicks on the wrong point a different image is presented than expect
 \subsubsection{MIBA}
 \label{sssec:miba}
 
-This scheme is very similar to CCP but with the addition of several new features.
+MIBA~\cite{ritter2013miba} is a recent scheme that is very similar to CCP but with the addition of several new features.
 For one, it has a grid overlay to help the user with selecting click points.
 Also, the differentiation between long and short presses on a given point can lead to different passwords in this scheme which aids in improving the password space.
+
+\subsubsection{Password strength}
+\label{sssec:password_strength}
+
+\begin{table*}[t]
+    \centering
+    \normalsize{
+    \begin{tabular}{c c c c c}
+        Scheme & Rounds (14 bit) & Clicks (14 bit) & Rounds (42 bit) & Clicks (42 bit) \\
+        \hline
+        Pass-Go & 1 & stroke length 2 & 1 & stroke length 6 \\
+        UYI & 3 & 3 & 10 & 10 \\
+        TAPI & 3 & 3 & 7 & 7 \\
+        CCP & 3 & 3 & 9 & 9 \\
+        MIBA & 1 & 1-2 & 3 & 3-6 \\
+        PIN & 1 & 4 & 1 & 13 \\
+    \end{tabular}
+    }
+    \label{fig:pw}
+    \caption{Password strength graphical passwords}
+\end{table*}
+
+In order to fully appreciate the relative password strenghts of the different graphical password techniques described in this section we will reproduce the work done in~\cite{schaub2013exploring} in 
+%\autoref{fig:pw}.
+Table 1.
+
+Note that all graphical passwords have a theoretical lower amount of user interaction in the form of clicks than a PIN of the same strength.
+However, these calculations are based upon the theoretical password space, not a practical one and thus in practice these values may need adjusting.
 
 \section{Assessment of the state-of-the-art}
 \label{sec:assessment_of_the_state_of_the_art}
