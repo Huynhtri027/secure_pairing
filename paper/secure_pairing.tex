@@ -157,19 +157,53 @@ However, these have slightly weaker security guarantees~\cite{saxena2008automate
 %TODO: Extend the explanations and add a few more techniques.
 
 In this section we describe several pairing methods proposed in the literature.
+We can distinguish different kinds of secure pairing methods.
+Mostly, they differ in the amount of human intervention necessary.
+Some require only some preliminary setup from the user, others require the user to participate and other ones do not require user intervention at all.
+
 
 \subsection{Image comparison}
 An early approach to the problem of secure pairing involves image comparison.
 On both devices an image of the OOB data is shown and the user is asked to compare both images.
 The underlying protocol is the one described in \autoref{ssec:talking_to_strangers}.
-Examples are \textit{Snowflake}\cite{goldberg1996visual}, \textit{Random Arts Visual Hash}\cite{perrig1999hash} and \textit{Colorful Flag}\cite{dohrmann2002public}.
+Examples are \textit{Snowflake}~\cite{goldberg1996visual}, \textit{Random Arts Visual Hash}~\cite{perrig1999hash} and \textit{Colorful Flag}~\cite{dohrmann2002public}.
 These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets.
-However, all modern smartphones have such a display and for that reason the technique is not without its uses.
+However, all modern smartphones have such a display and for that reason the technique is not without its merits.
 
 \subsection{Seeing is Believing}
-In \cite{mccune2005seeing} camera phones are used in order to use the \textit{visual channel} to transfer some information.
-In this method one device uses its camera to take a snapshot of a barcode encoding of, e.g., the public key of the other device.
-The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
+In Seeing-is-Believing (SIB)~\cite{mccune2005seeing} camera phones are used to set up a pairing between two devices.
+Given at least one device with a camera we can make sure that this device is communicating with the device we look at through the camera.
+The device with a camera takes a snapshot of the barcode encoding of relevant cryptographic data, for instance the data in one of the protocols in \autoref{sec:cryptographic_protocols_for_secure_device_pairing}.
+The cryptographic data is then used to bootstrap a secure connection between the two devices.
+
+This method can work with a number of different sets of interfaces.
+Ideally we have two devices, each of which has a camera \emph{and} a display.
+% Since both devices have displays we can manage authentication with either displaying a long-term public key or an ephemeral one (by randomizing the displayed information) an.
+We could do mutual authentication in a general way by applying, for instance, the \emph{Talking to Strangers} technique.
+However, we can also manage with less than that.
+If only one device has a camera we need to affix a barcode containing the necessary cryptographic information (e.g., a long-term public key or a commitment thereof) to the device.
+In this case we can still authenticate the camera 
+There are a few more combinations of interfaces to be examined and for the sake of comprehensiveness we shall reproduce in \autoref{table:sib} the full table of combinations of interfaces as found in~\cite{mccune2005seeing}.
+
+\begin{figure}[h]
+    \label{table:sib}
+    \begin{tabular}{ c | c c c c }
+      X/Y  & CD & C & D & N \\ \hline
+        CD & $\checkmark$ & $\checkmark^*$ & $\checkmark$ & $\checkmark^*$ \\
+        C & $\checkmark$ & $\checkmark^*$ & $\checkmark$ & $\checkmark^*$ \\
+        D & presence & presence & X & X \\
+        N & x & x & x & x \\
+    \end{tabular}
+    \\ \\
+    \small{Check whether X can authenticate to Y, C = camera, D = display, CD = both, N = neither, $\checkmark$ = strong authentication possible, $\checkmark^*$ = affixed barcode necessary, presence = can only verify the presence of a device, X = no authentication possible.}
+    \caption{Authentication capabilities}.
+\end{figure}
+
+Of course, we need both sides to be able to authenticate to do mutual authentication, i.e., the CD - CD combination.
+
+
+% In this method one device uses its camera to take a snapshot of a barcode encoding of, for example, the public key of the other device.
+% The minimum set of interfaces for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
 
 \subsection{Blinking lights}
 Related to \textit{Seeing is Believing} is the \textit{Blinking lights} method.
