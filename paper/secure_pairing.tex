@@ -190,7 +190,6 @@ In this case we can still authenticate the camera
 There are a few more combinations of interfaces to be examined and for the sake of comprehensiveness we shall reproduce in \autoref{table:sib} the full table of combinations of interfaces as found in~\cite{mccune2005seeing}.
 
 \begin{figure}[h]
-    \label{table:sib}
     \begin{tabular}{ c | c c c c }
       X/Y  & CD & C & D & N \\ \hline
         CD & $\checkmark$ & $\checkmark^*$ & $\checkmark$ & $\checkmark^*$ \\
@@ -201,6 +200,7 @@ There are a few more combinations of interfaces to be examined and for the sake 
     \\ \\
     \small{Check whether X can authenticate to Y, C = camera, D = display, CD = both, N = neither, $\checkmark$ = strong authentication possible, $\checkmark^*$ = affixed barcode necessary, presence = can only verify the presence of a device, X = no authentication possible.}
     \caption{Authentication capabilities}.
+    \label{table:sib}
 \end{figure}
 
 Of course, we need both sides to be able to authenticate to do mutual authentication, i.e., the CD - CD combination.
