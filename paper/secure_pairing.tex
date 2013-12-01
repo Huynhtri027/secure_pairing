@@ -1,4 +1,4 @@
-\documentclass[conference, 11pt]{sty/IEEEtran}
+\documentclass[conference, 12pt]{sty/IEEEtran}
 % \documentclass[paper=a4, fontsize=11pt]{scrartcl}
 
 \title{Secure Pairing}
@@ -7,6 +7,12 @@
 
 \usepackage{hyperref}
 \usepackage{amsmath, amssymb}
+\usepackage{mathtools}
+
+\newlength{\arrow}
+\settowidth{\arrow}{\scriptsize$100000000000$}
+\newcommand*{\rarrow}[1]{\xrightarrow{\mathmakebox[\arrow]{#1}}}
+\newcommand*{\larrow}[1]{\xleftarrow{\mathmakebox[\arrow]{#1}}}
 
 \begin{document}
 
@@ -107,13 +113,44 @@ This works because we have committed in a secure way on the public keys we will 
 \label{ssec:short_authenticated_strings}
 
 A \emph{Short Authenticated Strings} (SAS) protocol achieves mutual authentication, much like the previously discussed protocol.
-The main advantage is that the amount of data necessary for transfer over the OOB channel is fairly small.
+The SAS protocol primarily utilizes a commitment scheme in order to get an agreement on each other's public keys in combination with an OOB channel for transmitting a short string.
+This string is authenticated due to the nature of a suitable OOB channel, hence the name SAS.
 
-The protocol primarily utilizes commitment schemes in order to get an agreement on each other's public keys.
-The scheme, as denoted in~\cite{saxena2008automated} and~\cite{saxena2006secure} works by having two random values.
-One party, let us say Alice, commits to her random value which which, when opened by sending the decommit value, gives access to Alice's random value.
-In the meanwhile the other party has sent its random value in the clear to Alice.
-Both parties now communicate over an OOB channel in order to check if both parties have received the same random values.
+A simple yet robust protocol using this technique is proposed in~\cite{pasini2006sas}, which we reproduced in \autoref{fig:sas}.
+It works by having two parties, say A and B, pick a random value and having A commit on this value.
+Party B then sends its random value in the clear to A.
+When this is done, A sends B its decommit value after which B opens the commit, revealing A's random value.
+Now both parties have each other's random value but they are not sure whether these values are correct.
+Since all communication so far has been on the wireless channel, an attacker might have been able to tamper with the messages so far.
+To fix this, both parties compute the XOR of the random values they received and subsequently send the other party this XOR'ed value over the OOB channel.
+Both parties then just check whether the values are the same.
+
+\begin{figure*}
+\[
+\begin{array}{c c c}
+    \text{A} & & \text{B}  \\
+    \text{input}: m_A & & \text{input}: m_b \\ \\ \hline \\
+    R_A \in_U \{0,1\}^k & & R_B \in_U {0,1}^k \\
+    (c,d) \gets commit(m_A, R_A) & \rarrow{c} & \\
+                                 & \larrow{R_B} & \\
+                                 & \rarrow{d} & \hat{R}_A \gets open(m_B, \hat{c}, \hat{d}) \\
+    SAS \gets R_A \oplus \hat{R}_B & \rarrow{auth_{A}(SAS)} & SAS =^? \hat{R}_A \oplus R_B \\
+    \text{check SAS is the same} & \larrow{auth_{B}(SAS)} & \\ 
+\end{array}
+\]
+With: \\
+$(c,d) \gets commit(m,r)$ generates commit value $c$ and decommit value $d$ for a key $r$ with tag $m$; \\
+$r \gets open(m,c,d)$ yields $r$ if $(c,d)$ is a possible output for $commit(m,r)$; \\
+$auth_{ID}(m)$ a message $m$ over an authenticated (OOB) channel from $ID$;
+$m_A = m_B$ in an honest run of the protocol.
+\caption{SAS protocol for mutual authentication}
+\label{fig:sas}
+\end{figure*}
+
+This is arguably one of the simpler SAS protocols.
+It assumes that their is a bidirectional OOB channel between the two devices.
+\cite{saxena2008automated} and~\cite{saxena2006secure} propose very similar protocols that can be executed using unidirectional OOB channel.
+However, these have slightly weaker security guarantees~\cite{saxena2008automated}.
 
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
