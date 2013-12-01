@@ -279,9 +279,9 @@ Secure pairing methods try to defend against a Man-in-the-middle (MITM) attack, 
 An eavesdropper intruding into the devices involved or compromising either of the users of the devices in the pairing is outside of the attacker model.
 
 The risk of eavesdropping, in our view, can then be directly quantified in terms of the leakage to outside observers of the communication channels used.
-In the case of device-controlled pairing with a high bandwidth channel we can employ strong cryptographic primitives (e.g. Diffie-Hellman) to negate such leakage.
+In the case of device-controlled pairing with a high bandwidth channel we can employ cryptographic primitives to negate such leakage.
 As a last resort, we can attempt to make interception of leaking signals very hard by raising the complexity and frequency of signals.
-Because of the aspect this is a security property that cannot be proven using the formal methods we are used to.
+This is a property that we found difficult to quantify using the formal methods in cryptography we are used to.
 In all cases we prefer minimal leakage within a certain physical radius from the devices.
 
 Our considerations for these assessments are as follows:
@@ -300,7 +300,10 @@ Our considerations for these assessments are as follows:
 \end{itemize}
 
 In conclusion, we propose the following leakage assessment.
+We use three metrics, namely: the estimated \emph{leakage} in terms of the radius at which the signals dissipate comparatively; the ability to use strong \emph{cryptographic primitives} over an out-of-band channel or if the method can be used to validate shared secrets agreed upon in-band; and finally, whether the \emph{complexity of the signal} can be practically raised to further thwart eavesdroppers.
 
+% table squishing
+\hspace{-3em}
 \begin{footnotesize}
 \begin{tabular}{c|c|c|c}
 	Technique & Leakage radius & Crypto & Signal complexity \\
@@ -310,10 +313,11 @@ In conclusion, we propose the following leakage assessment.
     	  Graphical passwords & Low & No & Medium \\
   Blinking Lights & Medium & Yes & High \\
 	 HAPADEP & Medium & Yes & High \\
-	Image comparison & Medium & No & Medium\\
+	Image comparison & Medium & Yes & Medium\\
 	Infrared & High & Yes & High \\
 \end{tabular}
 \end{footnotesize}
+\hspace{3em}
 
 %Another factor at play in the security of pairing in practice is the length of the secret message that is agreed upon through the chosen channel, i.e. \emph{key length}.
 %Since none of the techniques considered define a required minimal or maximal key length, this aspect does not relate to the pairing methods investigated.
@@ -337,24 +341,26 @@ They identify the distinction between Device Controlled (DC) and User Controlled
 \section{Design}
 \label{sec:design}
 %TODO: We do not have an implementation just yet.
-In line with the delivered goals of this project, we have drafted a proof of concept Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
-The design makes use of 2D bar codes (specifically, QR codes) to transmit and receive information, and to this end the open source \textit{android-quick-response-code}\cite{aqrc} library.
-This communication channel is used to do a Diffie-Hellman (DH) key exchange, which is converted to a passphrase to establish a conventional PIN-based Bluetooth connection pairing.
-
-%The application allows two Android devices to agree upon the same key 
+In line with the deliverables of this project, we have drafted a proof of concept implementation of a Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
+The design makes use of 2D bar codes (specifically, QR codes) to transmit and receive information, using the open source \textit{android-quick-response-code}\cite{aqrc} library.
+This communication channel is used to do a Diffie-Hellman (DH) key exchange, which is converted to a passphrase which can be used to do a conventional PIN-based Bluetooth connection pairing.
 
 Although the Bluetooth 2.0 specification defines the possibility to do a Bluetooth pairing using Out-of-Band data, the API calls to do this are unfortunately not public on all versions of Android, and as such no programmatically portable way to complete a pairing is available on the platform.
-%The conversion will use a custom hash function that uses the binary data that was agreed upon out of band in a regular Simple Secure Pairing (SSP) for Bluetooth 2.1 and higher, or used to derive a PIN code for legacy Bluetooth device pairing.
 
 \subsection{Overview}
 \label{ssec:overview}
-
-TODO: We need an implementation first.
+%TODO: We need an implementation first.
+The main application allows users to configure their devices to either initiate or receive a pairing request.
+In both cases the clients generate their half of a Diffie-Hellman key exchange.
+Once the receiver is done it will switch to sender mode, and the initiator will switch to receiver mode after the user confirms by pressing a button.
+This is done by stacking Android \textit{Activities}, launching one and queueing another to run when the primary activity has finished.
 
 \section{Conclusion}
 \label{sec:conclusion}
+%TODO: To be done after the implementation section is finished.
+The QR code mechanism allows us to establish Diffie-Hellman keys with reasonable length. In our implementation we chose a 2048 bit modulus, which is still considered secure for the foreseeable future according to the recently updated research survey at \textit{keylength.com}\cite{keylengthdotcom}.
 
-TODO: To be done after the implementation section is finished.
+The implementation work does show that the method is usable in practice, and we can conclude mobile devices equipped to scan and display QR codes are enabled to do strong key negotiation using this out-of-band channel.
 
 \bibliographystyle{plain}
 \bibliography{../references/references.bib}
