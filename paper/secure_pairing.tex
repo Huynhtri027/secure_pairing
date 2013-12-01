@@ -276,6 +276,12 @@ Its intended use is in situations where one may not have an available wireless c
 It can use the audio channel for all messages instead.
 That said, it can also be used in such a way that only some messages are sent using this audio channel, everything else can go via wireless.
 
+For transmitting any message in general over the audio channel we just apply a special codec to the message and out the result over the speaker.
+The receiver then decodes whatever it gets on its microphone back to the original message.
+Protocol-wise we use a system that is very similar to LaC.
+First we send the respective public keys over the audio channel by encoding the key to audio, outputting it over the speaker and decoding it back to its original form on the receiver's end.
+Then we verify that this went correctly by vocalizing the public keys on both ends, like in LaC.
+The user then verifies that these two vocalized keys, or hashes of keys, are indeed the same.
 
 \subsection{Graphical passwords}
 \label{ssec:graphical_passwords}
