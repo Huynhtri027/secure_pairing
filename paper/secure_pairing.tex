@@ -1,5 +1,5 @@
-\documentclass[conference, 12pt]{sty/IEEEtran}
-% \documentclass[paper=a4, fontsize=10pt]{scrartcl}
+\documentclass[conference, 11pt]{sty/IEEEtran}
+% \documentclass[paper=a4, fontsize=11pt]{scrartcl}
 
 \title{Secure Pairing}
 \author{Erik Boss \and Max Hovens \and Anton Jongsma \and Aram Verstegen}
@@ -20,7 +20,7 @@
 \label{sec:introduction}
 
 The proliferation of devices, mobile or otherwise, communicating over wireless channels leads to interesting problems.
-In particular, it is very easy to eavesdrop on and manipulate said, making man-in-the-middle attacks a relevant threat~\cite{kumar2009comparative}.
+In particular, it is very easy to eavesdrop on and manipulate said, making man-in-the-middle (MitM) attacks a relevant threat~\cite{kumar2009comparative}.
 Which is a risk from a security point of view.
 The obvious way to combat this threat is to secure this wireless channel.
 This is where \emph{secure device pairing} comes in.
@@ -29,10 +29,12 @@ Secure device pairing (or secure pairing, for short) is the process of creating 
 That is, a secure pairing scheme needs to be able to provide mutual authentication without relying on external trust anchors.
 Because we cannot rely on an external infrastructure as a basis of trust most of the standard techniques are not easily applicable.
 In particular, there is an need~\cite{kumar2009comparative} to do some part of the communication over an auxiliary channel, so-called out-of-band (OOB) channels.
+These OOB channels have special security properties by virtue of the media over which the data travels~\cite{balfanz2002talking}.
+They may, due to their nature, prevent MitM attacks by providing what is essentially a secure channel.
 
 These OOB channels are managed by the users themselves and typically rely on human interaction to authenticate the communication over the wireless channel.
 Suppose we use human visual capabilities as an OOB channel, for instance in the case of asking a user to compare images.
-This channel is very hard to interfere with for an attacker without the human user(s) noticing.
+This channel is very hard to interfere with for an attacker without the human user(s) noticing, thus exhibiting one of these special security properties we mentioned.
 Overall, there are many such OOB channels, some of which we shall discuss in subsequent sections in the paper.
 One problem with such channels is that they often rely on a certain common set of interfaces.
 However, interface-wise almost no two devices are alike and it is common for two very different devices to need a secure communication channel.
@@ -60,30 +62,46 @@ This serves as a case study and a convenient platform for discussing the securit
 
 TODO: Add more details perhaps (maybe a picture?).
 
-In this section we shall discuss a few general ways of accomplishing the authentication of two devices assuming a suitable OOB channel is in place.
-The idea is that these protocols can determine the content of the information being exchanged without relying too much on the particular channel.
-Again, this the separation between the content and the method (or representation) of the secure pairing technique.
+In this section we discuss a few general ways of accomplishing the mutual authentication of two devices assuming a suitable OOB channel is in place.
+These protocols determine the content of the information being exchanged without relying too much on the particular channel.
 Note, however, that this does not mean that every, or even most, of the techniques described in the next section use one of these protocols.
-Many of those exploit particular characteristics of their respective representations or OOB channels.
+Many of those exploit, or are limited by, the particular characteristics of their respective representations and/or OOB channels.
+That said, these protocols are useful for achieving mutual authentication in a general way assuming the OOB is suitably capable.
 
 \subsection{Talking to Strangers}
 \label{ssec:talking_to_strangers}
 
-A fairly old method, it describes a system~\cite{balfanz2002talking} that relies on a suitable OOB channel in order to transmit pre-authentication data after which standard protocols can be implemented.
-Specifically, each party sends their public key over the normal wireless channel and a hash of said public key over the OOB channel.
+A technique dating back to 2002, \emph{Talking to Strangers}~\cite{balfanz2002talking} is a system that relies on a suitable OOB channel in order to transmit pre-authentication data after which standard authentication protocols can be implemented.
+A suitable OOB channel in this system must have the following two properties:
 
-More formally, the pre-authentication looks as follows given addresses $addr_A$ and $addr_B$ for parties $A$ and $B$, their respective public keys $pk_A$ and $pk_B$ and a collision resistant hash function $h$:
+\begin{itemize}
+    \item Support demonstrative identification.
+        This entails the identification of a specific object, or a set of objects, based on their physical context.
+        For instance, the pointing of an infra-red laser at an object in order to single out that particular object for communication.
+    \item Authenticity.
+        This entails the fact that an attacker must find it infeasible to transmit on the particular OOB channel, at least without said transmission being detected by legitimate users.
+\end{itemize}
+
+Note that we do not need the data transmitted over the OOB channel to be secret, we only need it to be authentic.
+
+\emph{Talking to Strangers} uses such a suitable OOB channel for achieving mutual authentication by means of public-key encryption (PKE).
+The problem of achieving mutual authentication when one has authenticated copies of each other's public keys is actually very simple.
+This means that we only need to get authenticated copies of the public keys, which is where the OOB channel comes into play.
+Specifically, each party sends their public key over the normal wireless channel and a hash of said public key over the OOB channel.
+The hash serves as a \emph{commit} on the public key.
+After this pre-authentication step, any number of normal authentication protocols can be executed as long as they can make use such authenticated public keys.
+
+More formally, the pre-authentication looks as follows:
+Given addresses $addr_A$ and $addr_B$ for parties $A$ and $B$, their respective public keys $pk_A$ and $pk_B$ and a collision resistant hash function $h$, we execute the following protocol over the OOB channel:
 
 \begin{enumerate}
     \item $A \rightarrow B: addr_A, h(pk_A)$
     \item $B \rightarrow A: addr_B, h(pk_B)$
 \end{enumerate}
 
-After which we can proceed with a standard key exchange protocol.
-
-The initial proposal used infra-red signals as an OOB channel.
-Note, however, Infra-red as an OOB channel may not be as secure as one would like~\cite{kumar2009comparative}.
-The overall technique is broad enough to be useful for other OOB channels.
+After which we can proceed with a standard key exchange protocol (e.g., SSL/TLS).
+This can be done over the wireless channel.
+This works because we have committed in a secure way on the public keys we will be using.
 
 \subsection{Short Authenticated Strings}
 \label{ssec:short_authenticated_strings}
