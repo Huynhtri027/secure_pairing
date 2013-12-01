@@ -1,71 +1,366 @@
-\documentclass[conference, 11pt]{sty/IEEEtran}
+\documentclass[conference, 12pt]{sty/IEEEtran}
+% \documentclass[paper=a4, fontsize=11pt]{scrartcl}
 
 \title{Secure Pairing}
 \author{Erik Boss \and Max Hovens \and Anton Jongsma \and Aram Verstegen}
 \date{\today}
 
 \usepackage{hyperref}
+\usepackage{amsmath, amssymb}
+\usepackage{sty/mathtools}
+
+\newlength{\arrow}
+\settowidth{\arrow}{\scriptsize$100000000000$}
+\newcommand*{\rarrow}[1]{\xrightarrow{\mathmakebox[\arrow]{#1}}}
+\newcommand*{\larrow}[1]{\xleftarrow{\mathmakebox[\arrow]{#1}}}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-    
+    TODO: Will be written after everything is finished. Such is the nature of abstracts.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 
+The proliferation of devices, mobile or otherwise, communicating over wireless channels leads to interesting problems.
+In particular, it is very easy to eavesdrop on and manipulate said, making man-in-the-middle (MitM) attacks a relevant threat~\cite{kumar2009comparative}.
+Which is a risk from a security point of view.
+The obvious way to combat this threat is to secure this wireless channel.
+This is where \emph{secure device pairing} comes in.
 
-Device \textit{pairing} is the process of connecting two devices who have never seen each other before with mutual authentication which does not rely on an external trust anchor as is the case with traditional authentication.
-Accomplishing this in a correct and secure way in a mobile setting is an interesting problem.
-In particular, the obvious increase in devices using wireless signals makes the problem more relevant as it is often necessary to have these devices communicate securely with each other.
-How do we make sure that the devices know that they are communicating with the correct parties?
-How do we agree on keys?
-These problems are only exacerbated by the fact that often we are dealing with very constrained devices in terms of size and performance.
-Even if we do not necessarily have problems in terms of resources we can still have problems in terms of usability.
-For instance, on modern phones we have a great deal of resources in terms of performance.
-The dependence on, say, a PIN that needs to be remembered greatly hampers the technique from a usability point of view. 
-Passwords or PINs are forgotten all the time.
+Secure device pairing (or secure pairing, for short) is the process of creating a secure channel between two devices that have no previous security context.
+That is, a secure pairing scheme needs to be able to provide mutual authentication without relying on external trust anchors.
+Because we cannot rely on an external infrastructure as a basis of trust most of the standard techniques are not easily applicable.
+In particular, there is an need~\cite{kumar2009comparative} to do some part of the communication over an auxiliary channel, so-called out-of-band (OOB) channels.
+These OOB channels have special security properties by virtue of the media over which the data travels~\cite{balfanz2002talking}.
+They may, due to their nature, prevent MitM attacks by providing what is essentially a secure channel.
 
-In this paper we shall do a number of things.
-First, we shall provide a survey of techniques pertaining to what appears to be the state-of-the-art in secure pairing.
-We shall then proceed to briefly assess the state-of-the-art from both a security and a usability perspective.
-Furthermore, we shall strive to implement a secure pairing system between two mobile phones relying on QR-codes to set up a secure connection.
-This can serve as a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
+These OOB channels are managed by the users themselves and typically rely on human interaction to authenticate the communication over the wireless channel.
+Suppose we use human visual capabilities as an OOB channel, for instance in the case of asking a user to compare images.
+This channel is very hard to interfere with for an attacker without the human user(s) noticing, thus exhibiting one of these special security properties we mentioned.
+Overall, there are many such OOB channels, some of which we shall discuss in subsequent sections in the paper.
+One problem with such channels is that they often rely on a certain common set of interfaces.
+However, interface-wise almost no two devices are alike and it is common for two very different devices to need a secure communication channel.
+For instance, a recent mobile phone might have a (virtual) keyboard, a camera and a smattering of sensors.
+A simple wireless bluetooth headset, however, likely has almost none of these things and is probably limited to just communicating over a wireless channel.
+This makes establishing an OOB channel between such disparate devices a tricky endeavour.
 
-\section{Pairing methods}
+There are two elements to a secure pairing scheme.
+Essentially, we can often separate the content of the communication and the method of communication.
+The content is determined primarily by the protocol, the method entails the way in which certain interfaces are used in order to use this protocol.
+Most of our focus will be on the latter, since the protocols are typically not very complex.
+We will mention, however, some of the common protocols used for establing a secure pairing.
+
+We structure our paper as follows.
+We start off with a survey of the protocols and techniques used in secure device pairing.
+In \autoref{sec:cryptographic_protocols_for_secure_device_pairing} we discuss a number of protocols used for secure device pairing, i.e., they specify the content of the communication.
+These, as a rule, do not rely on a particular OOB channel.
+Then, in \autoref{sec:secure_device_pairing_methods}, we discuss several methods of establishing a secure pairing.
+We then proceed in \autoref{sec:assessment_of_the_state_of_the_art} to briefly assess the state-of-the-art in secure device pairing from both a security and a usability perspective.
+Furthermore, we discuss an implementation of a secure device pairing system between two mobile phones relying on QR-codes as an OOB channel.
+This serves as a case study and a convenient platform for discussing the security and usability of such systems, in particular the trade-offs between those two concepts.
+
+\section{Cryptographic protocols for secure device pairing}
+\label{sec:cryptographic_protocols_for_secure_device_pairing}
+
+TODO: Add more details perhaps (maybe a picture?).
+
+In this section we discuss a few general ways of accomplishing the mutual authentication of two devices assuming a suitable OOB channel is in place.
+These protocols determine the content of the information being exchanged without relying too much on the particular channel.
+Note, however, that this does not mean that every, or even most, of the techniques described in the next section use one of these protocols.
+Many of those exploit, or are limited by, the particular characteristics of their respective representations and/or OOB channels.
+That said, these protocols are useful for achieving mutual authentication in a general way assuming the OOB is suitably capable.
+
+\subsection{Talking to Strangers}
+\label{ssec:talking_to_strangers}
+
+A technique dating back to 2002, \emph{Talking to Strangers}~\cite{balfanz2002talking} is a system that relies on a suitable OOB channel in order to transmit pre-authentication data after which standard authentication protocols can be implemented.
+A suitable OOB channel in this system must have the following two properties:
+
+\begin{itemize}
+    \item Support demonstrative identification.
+        This entails the identification of a specific object, or a set of objects, based on their physical context.
+        For instance, the pointing of an infra-red laser at an object in order to single out that particular object for communication.
+    \item Authenticity.
+        This entails the fact that an attacker must find it infeasible to transmit on the particular OOB channel, at least without said transmission being detected by legitimate users.
+\end{itemize}
+
+Note that we do not need the data transmitted over the OOB channel to be secret, we only need it to be authentic.
+
+\emph{Talking to Strangers} uses such a suitable OOB channel for achieving mutual authentication by means of public-key encryption (PKE).
+The problem of achieving mutual authentication when one has authenticated copies of each other's public keys is actually very simple.
+This means that we only need to get authenticated copies of the public keys, which is where the OOB channel comes into play.
+Specifically, each party sends their public key over the normal wireless channel and a hash of said public key over the OOB channel.
+The hash serves as a \emph{commit} on the public key.
+After this pre-authentication step, any number of normal authentication protocols can be executed as long as they can make use such authenticated public keys.
+
+More formally, the pre-authentication looks as follows:
+Given addresses $addr_A$ and $addr_B$ for parties $A$ and $B$, their respective public keys $pk_A$ and $pk_B$ and a collision resistant hash function $h$, we execute the following protocol over the OOB channel:
+
+\begin{enumerate}
+    \item $A \rightarrow B: addr_A, h(pk_A)$
+    \item $B \rightarrow A: addr_B, h(pk_B)$
+\end{enumerate}
+
+After which we can proceed with a standard key exchange protocol (e.g., SSL/TLS).
+This can be done over the wireless channel.
+This works because we have committed in a secure way on the public keys we will be using.
+
+\subsection{Short Authenticated Strings}
+\label{ssec:short_authenticated_strings}
+
+A \emph{Short Authenticated Strings} (SAS) protocol achieves mutual authentication, much like the previously discussed protocol.
+The SAS protocol primarily utilizes a commitment scheme in order to get an agreement on each other's public keys in combination with an OOB channel for transmitting a short string.
+This string is authenticated due to the nature of a suitable OOB channel, hence the name SAS.
+
+A simple yet robust protocol using this technique is proposed in~\cite{pasini2006sas}, which we reproduced in \autoref{fig:sas}.
+It works by having two parties, say A and B, pick a random value and having A commit on this value.
+Party B then sends its random value in the clear to A.
+When this is done, A sends B its decommit value after which B opens the commit, revealing A's random value.
+Now both parties have each other's random value but they are not sure whether these values are correct.
+Since all communication so far has been on the wireless channel, an attacker might have been able to tamper with the messages so far.
+To fix this, both parties compute the XOR of the random values they received and subsequently send the other party this XOR'ed value over the OOB channel.
+Both parties then just check whether the values are the same.
+
+\begin{figure*}
+\[
+\begin{array}{c c c}
+    \text{A} & & \text{B}  \\
+    \text{input}: m_A & & \text{input}: m_b \\ \\ \hline \\
+    R_A \in_U \{0,1\}^k & & R_B \in_U {0,1}^k \\
+    (c,d) \gets commit(m_A, R_A) & \rarrow{c} & \\
+                                 & \larrow{R_B} & \\
+                                 & \rarrow{d} & \hat{R}_A \gets open(m_B, \hat{c}, \hat{d}) \\
+    SAS \gets R_A \oplus \hat{R}_B & \rarrow{auth_{A}(SAS)} & SAS =^? \hat{R}_A \oplus R_B \\
+    \text{check SAS is the same} & \larrow{auth_{B}(SAS)} & \\ 
+\end{array}
+\]
+With: \\
+$(c,d) \gets commit(m,r)$ generates commit value $c$ and decommit value $d$ for a key $r$ with tag $m$; \\
+$r \gets open(m,c,d)$ yields $r$ if $(c,d)$ is a possible output for $commit(m,r)$; \\
+$auth_{ID}(m)$ a message $m$ over an authenticated (OOB) channel from $ID$;
+$m_A = m_B$ in an honest run of the protocol.
+\caption{SAS protocol for mutual authentication}
+\label{fig:sas}
+\end{figure*}
+
+This is arguably one of the simpler SAS protocols.
+It assumes that their is a bidirectional OOB channel between the two devices.
+\cite{saxena2008automated} and~\cite{saxena2006secure} propose very similar protocols that can be executed using unidirectional OOB channel.
+However, these have slightly weaker security guarantees~\cite{saxena2008automated}.
+
+\section{Secure device pairing methods}
+\label{sec:secure_device_pairing_methods}
+
+TODO: Extend the explanations and add a few more techniques.
 
 In this section we describe several pairing methods proposed in the literature.
 
-\subsection{Image comparing}
-An early approach to the problem of secure pairing involves image compairing.
+\subsection{Image comparison}
+An early approach to the problem of secure pairing involves image comparison.
 On both devices an image of the OOB data is shown and the user is asked to compare both images.
+The underlying protocol is the one described in \autoref{ssec:talking_to_strangers}.
 Examples are \textit{Snowflake}\cite{goldberg1996visual}, \textit{Random Arts Visual Hash}\cite{perrig1999hash} and \textit{Colorful Flag}\cite{dohrmann2002public}.
-These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets. However, all modern smartphones have such a display.
+These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets.
+However, all modern smartphones have such a display and for that reason the technique is not without its uses.
 
-\subsection{Seeing is believing}
-In \cite{mccune2005seeing} camera phones use the \textit{visual channel} to transfer some information. In this method one device uses its camera to take a snapshot of a barcode encoding for example the public key of the other device. The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
+\subsection{Seeing is Believing}
+In \cite{mccune2005seeing} camera phones are used in order to use the \textit{visual channel} to transfer some information.
+In this method one device uses its camera to take a snapshot of a barcode encoding of, e.g., the public key of the other device.
+The minimum for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
 
 \subsection{Blinking lights}
-Related to \textit{Seeing is believing} is the \textit{Blinking lights} method.
+Related to \textit{Seeing is Believing} is the \textit{Blinking lights} method.
 Instead of a display and a camera the devices in the method use a LED and a light-sensor or camera.
 The LED-equipped device transmits the authentication data by blinking the LED.
-The other device recovers the data by recording the blinking and looking at the inter-blink gaps.
+The other device recovers the data by recording the blinking and looking at the gaps between distinct blinks.
 
 \subsection{Shake well before use}
-A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together to do the pairing.
+A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together in one hand to do the pairing.
+This is actually a very clever OOB channel, there really seems to be no way to eavesdrop with any effect on such a scheme.
+Also, shaking is a very distinctive gesture, making it relatively easy to derive measurements that can be mapped to bitstrings.
 It matches features extracted from the sensor data to derive a cryptographic key.
 
-\section{Usability study}
+It is also noted that while the shaking has sufficient entropy to be useful in key generation, its primary use is in key verification.
+That is, similar to the SAS protocol in \autoref{ssec:short_authenticated_strings} it may be more useful to just send regular randomly bytes to each other and \emph{then} verify that was done correctly by means of an OOB channel, in this case the shaking gesture.
 
-\section{Security study}
+The feature extraction is a process that involves corrections for time alignment and spatial alignment before the data is usable at all.
+Indeed, it is easy to see that the particular way one holds both devices before shaking can lead to somewhat different measurements in each device.
+In particular, the time alignment is done through segmentation and the spatial alignment through normalization.
 
-\section{Implemenation}
+\subsection{Loud and Clear}
+\label{ssec:loud_and_clear}
+
+Loud and clear~\cite{goodrich2006loud} is a technique that uses audio as an OOB channel.
+The underlying protocol is the same as in \autoref{ssec:talking_to_strangers}.
+It works by vocalizing, using a specialized text-to-speech engine, authentication strings into syntactically correct English sentences.
+
+Two modes are possible, speaker-speaker mode and speaker-display mode.
+They require the user to respectively compare two vocalized strings or compare the vocalized string with a textual representation of such a string.
+
+\subsection{HAPADEP}
+\label{ssec:hapadep}
+
+Similar to Loud-and-Clear, HAPADEP~\cite{soriente2008hapadep} utilizes sound in order to get a pairing.
+Its intended use is in situations where one may not have an available wireless connection.
+It can use the audio channel for all messages instead.
+That said, it can also be used in such a way that only some messages are sent using this audio channel, everything else can go via wireless.
+
+
+\subsection{Graphical passwords}
+\label{ssec:graphical_passwords}
+
+Graphical passwords are somewhat different from what we have seen so far.
+As the name implies it entails the entering of passwords in a graphical manner as opposed to the usual practice of entering PINs or alphanumeric passwords in general.
+The idea is that these graphical passwords can provide a similar level of security while being more memorable.
+Do note that these techniques do not necessarily use an OOB channel, they really are passwords in the more traditional sense, which is really what sets them apart from some of the other techniques discussed in this paper.
+
+In \cite{gajos2006exploring} five different types of graphical passwords are discussed: \emph{Pass-Go}, \emph{UYI}, \emph{TAPI}, \emph{CCP} and \emph{MIBA}.
+As an addition you might consider the Android gesture swipe unlocking scheme as a more recent example of such a system.
+However, that particular scheme suffers from problems in terms of predictability of patterns, lack of possibilities, easy should surfing and even smudge attacks~\cite{aviv2010smudge}.
+Whatever the case, the five techniques mentioned in \cite{gajos2006exploring} seem to cover quite a few different types of graphical passwords and we shall reproduce some of the descriptions with their respective characteristics here.
+
+\subsubsection{Pass-Go}
+\label{sssec:pass_go}
+
+Pass-Go entails the drawing dots and lines on a $n$-by-$n$ grid.
+The grid can be colored in such a way that the user is being given hints pertaining to the correct password.
+The size of $n$ primarily decides the security of the password, although $n$ does not really have to be very large.
+$n = 5$ was suggested for phones but since screen sizes have increased we believe that this can be increased proportionally.
+Also, the security can be enhanced by coloring the lines and dots differently.
+
+\subsubsection{UYI}
+\label{sssec:uyi}
+
+UYI is a simple scheme where the user has to pick a picture out of a number of distinct pictures.
+This is done several times in succession.
+Also, the pictures are presented in a somewhat abstracted version such that the user that set the key can recognize the picture but an adversary has a harder time.
+The amount of challenges and the amount of options determine the security of this scheme.
+Furthermore there must be a very large set of pictures to choose from.
+
+\subsubsection{TAPI}
+\label{sssec:tapi}
+
+TAPI is very similar to a regular PIN entry setup.
+It consists of a grid of 16 icons where each icon is split into four parts, this essentially gives you a PIN number pad with 64 possibilities as opposed to just ten.
+
+\subsubsection{CCP}
+\label{sssec:ccp}
+
+CCP entails presenting the user with subsequent pictures where the user must click on a certain point in said image.
+Depending on the particular point being clicked on we get a different subsequent picture.
+The password then is just a sequence of pictures with their respective correct click points.
+If the user clicks on the wrong point a different image is presented than expected and thus this serves as a kind of feedback to the user.
+
+\subsubsection{MIBA}
+\label{sssec:miba}
+
+This scheme is very similar to CCP but with the addition of several new features.
+For one, it has a grid overlay to help the user with selecting click points.
+Also, the differentiation between long and short presses on a given point can lead to different passwords in this scheme which aids in improving the password space.
+
+\section{Assessment of the state-of-the-art}
+\label{sec:assessment_of_the_state_of_the_art}
+
+In this section we summarize our assessments of the security and usability of different pairing methods.
+
+\subsection{Security assessment}
+\label{ssec:security_assessment}
+
+%TODO: Add assessments of different security properties.
+It makes little sense to evaluate the security of device pairing methods out of context: different devices make use of different communication channels, some of which are inherently harder to secure against eavesdropping.
+As a cost consideration it is often unfeasible to add more communication channels to provide an out-of-band channel for more secure pairing: the topic is in fact characterised by elegant solutions to the pairing problem by using communication channels that already exist in the devices.
+
+The assessment of what is secure is therefore based on the attacker model.
+Secure pairing methods try to defend against a Man-in-the-middle (MITM) attack, whereby an observer may actively or passively intercept (or possibly relay and modify) the communication between devices, which would defeat the desired goal of establishing a secure channel between two users who otherwise trust each other and their devices.
+An eavesdropper intruding into the devices involved or compromising either of the users of the devices in the pairing is outside of the attacker model.
+
+The risk of eavesdropping, in our view, can then be directly quantified in terms of the leakage to outside observers of the communication channels used.
+In the case of device-controlled pairing with a high bandwidth channel we can employ cryptographic primitives to negate such leakage.
+As a last resort, we can attempt to make interception of leaking signals very hard by raising the complexity and frequency of signals.
+This is a property that we found difficult to quantify using the formal methods in cryptography we are used to.
+In all cases we prefer minimal leakage within a certain physical radius from the devices.
+
+Our considerations for these assessments are as follows:
+\begin{itemize}
+	\item The shaking of two phones can incur subtle high-frequency signals to the accelerometers of the mobile devices, which is hard to observe without having access to the accelerometer data of a device that went through the same shaking pattern.
+	Using a high-speed camera or similar visual observation of the pairing process does not reveal these subtle signals to an observer.
+	We can use the signals to do cryptographic key verification rather than key negotiation.
+
+	\item Graphical passwords may be observed by an outside attacker, the different methods within this category may be vulnerable to a straightforward replay attack while others may be randomized and require several observations before the entire secret is recovered. In practice users are not willing to bring cryptography into the picture.
+	\item Image comparison is vulnerable to the same kind of observation, but the observed information may only be used in one and the same session and is thus not transferable to a straightforward replay attack.
+	In the naive implementation users are still involved and cryptography is not, but the images can also be used to do cryptographic key verification rather than key negotiation.
+	\item Blinking lights are similarly vulnerable to eavesdropping by an observer, since the light emitted by LED diodes is very bright in a certain light spectrum band, which can be clearly observed at a distance. But devices can employ some cryptographic primitives and signal complexity to defend against this.
+	Infrared LEDs exhibit the same leakage problem to a worse degree, but can also guard against it with cryptography and signal complexity.
+	\item HAPADEP makes use of audio signals, and is therefore susceptible to eavesdropping by conventional surveillance methods. Cryptographic primitives can be employed, as can signal complexity.
+	\item Observing a Seeing is Believing pairing may similarly reveal the secret information that is communicated. A device-controlled pairing can secure against this with cryptography and signal complexity.
+\end{itemize}
+
+In conclusion, we propose the following leakage assessment.
+We use three metrics, namely: the estimated \emph{leakage} in terms of the radius at which the signals dissipate comparatively; the ability to use strong \emph{cryptographic primitives} over an out-of-band channel or if the method can be used to validate shared secrets agreed upon in-band; and finally, whether the \emph{complexity of the signal} can be practically raised to further thwart eavesdroppers.
+
+% table squishing
+\hspace{-3em}
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+	Technique & Leakage radius & Crypto & Signal complexity \\
+	\hline
+	  Seeing is Believing & Low & Yes & High \\
+	Shake well before use & Low & Yes & High \\
+    	  Graphical passwords & Low & No & Medium \\
+  Blinking Lights & Medium & Yes & High \\
+	 HAPADEP & Medium & Yes & High \\
+	Image comparison & Medium & Yes & Medium\\
+	Infrared & High & Yes & High \\
+\end{tabular}
+\end{footnotesize}
+\hspace{3em}
+
+%Another factor at play in the security of pairing in practice is the length of the secret message that is agreed upon through the chosen channel, i.e. \emph{key length}.
+%Since none of the techniques considered define a required minimal or maximal key length, this aspect does not relate to the pairing methods investigated.
+%In effect, we are free to choose the strength of the used key independently of the chosen method of pairing.
+
+\subsection{Usability assessment}
+\label{ssec:usability_assessment}
+
+TODO: Extend explanations and add more different usability properties.
+
+Prior research into the usability of the secure pairing methods found in the literature~\cite{kumar2009comparative} established the System Usability Score (SUS) for the considered pairing methods, as well as measuring the perceived security and the time and success rate to complete the task of pairing by observing a group of 22 test subjects interacting with test impelementations in a controlled environment.
+The results of this study show that of the methods considered in this summary, PIN and image comparison methods have the best scores in every category.
+Blinking lights takes the longest time to complete, has a relatively low SUS score and the lowest task completion rate.
+Seeing is Believing has a relatively high task completion rate but on average takes a long time to complete.
+The established SUS score is about 50\% and the perceived security is about 60\%.
+Shake well before use was not considered in this usability study.
+
+In a similar study \cite{kobsa2009serial} some of the same authors identify the resistance of pairing methods against so-called \textit{rushing user} behaviour.
+They identify the distinction between Device Controlled (DC) and User Controlled (UC) pairing methods and observe that the UC pairing methods are more succeptible to the \textit{rushing user} behavior.
+
+\section{Design}
+\label{sec:design}
+%TODO: We do not have an implementation just yet.
+In line with the deliverables of this project, we have drafted a proof of concept implementation of a Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
+The design makes use of 2D bar codes (specifically, QR codes) to transmit and receive information, using the open source \textit{android-quick-response-code}\cite{aqrc} library.
+This communication channel is used to do a Diffie-Hellman (DH) key exchange, which is converted to a passphrase which can be used to do a conventional PIN-based Bluetooth connection pairing.
+
+Although the Bluetooth 2.0 specification defines the possibility to do a Bluetooth pairing using Out-of-Band data, the API calls to do this are unfortunately not public on all versions of Android, and as such no programmatically portable way to complete a pairing is available on the platform.
+
+\subsection{Overview}
+\label{ssec:overview}
+%TODO: We need an implementation first.
+The main application allows users to configure their devices to either initiate or receive a pairing request.
+In both cases the clients generate their half of a Diffie-Hellman key exchange.
+Once the receiver is done it will switch to sender mode, and the initiator will switch to receiver mode after the user confirms by pressing a button.
+This is done by stacking Android \textit{Activities}, launching one and queueing another to run when the primary activity has finished.
 
 \section{Conclusion}
 \label{sec:conclusion}
+%TODO: To be done after the implementation section is finished.
+The QR code mechanism allows us to establish Diffie-Hellman keys with reasonable length. In our implementation we chose a 2048 bit modulus, which is still considered secure for the foreseeable future according to the recently updated research survey at \textit{keylength.com}\cite{keylengthdotcom}.
+
+The implementation work does show that the method is usable in practice, and we can conclude mobile devices equipped to scan and display QR codes are enabled to do strong key negotiation using this out-of-band channel.
 
 \bibliographystyle{plain}
 \bibliography{../references/references.bib}
