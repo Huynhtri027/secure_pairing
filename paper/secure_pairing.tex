@@ -255,7 +255,7 @@ In particular, the time alignment is done through segmentation and the spatial a
 \subsection{Loud and Clear}
 \label{ssec:loud_and_clear}
 
-Loud and Clear (LiC)~\cite{goodrich2006loud} is a technique that uses audio as an OOB channel.
+Loud and Clear (LaC)~\cite{goodrich2006loud} is a technique that uses audio as an OOB channel.
 The underlying protocol is the same as in \autoref{ssec:talking_to_strangers}, although there is also a version that uses a SAS protocol like in \autoref{ssec:short_authenticated_strings}~\cite{kumar2009comparative}.
 It works by vocalizing, using a specialized text-to-speech engine, authentication strings into syntactically correct English sentences.
 
@@ -263,7 +263,7 @@ Two modes are possible, speaker-speaker mode and speaker-display mode.
 They require the user to respectively compare two vocalized strings or compare the vocalized string with a textual representation of such a string.
 Consider, for instance, the check that occurs in the pre-authentication for \emph{Talking with Strangers}.
 We need to check whether the $pk_A$ that $A$ sent to $B$ is the correct one.
-We can use LiC to have $A$ vocalize its $pk_A$ and have $B$ do the same, the user simply compares and either accepts or rejects.
+We can use LaC to have $A$ vocalize its $pk_A$ and have $B$ do the same, the user simply compares and either accepts or rejects.
 
 \subsection{HAPADEP}
 \label{ssec:hapadep}
