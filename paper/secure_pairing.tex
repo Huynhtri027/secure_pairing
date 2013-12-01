@@ -241,12 +241,12 @@ So for the expected bitstring $n$ we accept $n$ possible bitstrings.
 
 \subsection{Shake well before use}
 A different approach is taken in \cite{mayrhofer2009shake}, where two devices are supposed to be shaken together in one hand to do the pairing.
-This is actually a very clever OOB channel, there really seems to be no way to eavesdrop with any effect on such a scheme.
+Eavesdropping this particular OOB really seems almost impossible, making this an interesting proposal.
 Also, shaking is a very distinctive gesture, making it relatively easy to derive measurements that can be mapped to bitstrings.
 It matches features extracted from the sensor data to derive a cryptographic key.
 
 It is also noted that while the shaking has sufficient entropy to be useful in key generation, its primary use is in key verification.
-That is, similar to the SAS protocol in \autoref{ssec:short_authenticated_strings} it may be more useful to just send regular randomly bytes to each other and \emph{then} verify that was done correctly by means of an OOB channel, in this case the shaking gesture.
+That is, similar to the SAS protocol in \autoref{ssec:short_authenticated_strings} it may be more useful to just send random bytes to each other and \emph{then} verify that was done correctly by means of an OOB channel, in this case the shaking gesture.
 
 The feature extraction is a process that involves corrections for time alignment and spatial alignment before the data is usable at all.
 Indeed, it is easy to see that the particular way one holds both devices before shaking can lead to somewhat different measurements in each device.
@@ -255,12 +255,15 @@ In particular, the time alignment is done through segmentation and the spatial a
 \subsection{Loud and Clear}
 \label{ssec:loud_and_clear}
 
-Loud and clear~\cite{goodrich2006loud} is a technique that uses audio as an OOB channel.
-The underlying protocol is the same as in \autoref{ssec:talking_to_strangers}.
+Loud and Clear (LiC)~\cite{goodrich2006loud} is a technique that uses audio as an OOB channel.
+The underlying protocol is the same as in \autoref{ssec:talking_to_strangers}, although there is also a version that uses a SAS protocol like in \autoref{ssec:short_authenticated_strings}~\cite{kumar2009comparative}.
 It works by vocalizing, using a specialized text-to-speech engine, authentication strings into syntactically correct English sentences.
 
 Two modes are possible, speaker-speaker mode and speaker-display mode.
 They require the user to respectively compare two vocalized strings or compare the vocalized string with a textual representation of such a string.
+Consider, for instance, the check that occurs in the pre-authentication for \emph{Talking with Strangers}.
+We need to check whether the $pk_A$ that $A$ sent to $B$ is the correct one.
+We can use LiC to have $A$ vocalize its $pk_A$ and have $B$ do the same, the user simply compares and either accepts or rejects.
 
 \subsection{HAPADEP}
 \label{ssec:hapadep}
