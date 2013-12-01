@@ -210,43 +210,54 @@ In this section we summarize our assessments of the security and usability of di
 \subsection{Security assessment}
 \label{ssec:security_assessment}
 
-TODO: Add assessments of different security properties.
+%TODO: Add assessments of different security properties.
+It makes little sense to evaluate the security of device pairing methods out of context: different devices make use of different communication channels, some of which are inherently harder to secure against eavesdropping.
+As a cost consideration it is often unfeasible to add more communication channels to provide an out-of-band channel for more secure pairing: the topic is in fact characterised by elegant solutions to the pairing problem by using communication channels that already exist in the devices.
 
-In the literature there is no known set of criteria by which to evaluate secure pairing methods.
-Secure pairing methods are most at risk from a Man-in-the-middle (MITM) attack, whereby an observer may actively or passively intercept (or possibly relay and modify) the communication between devices, which would defeat the desired goal of establishing a secure channel.
-This risk, in our view, can be directly quantified in terms of the leakage of communication channels used.
+The assessment of what is secure is therefore based on the attacker model.
+Secure pairing methods try to defend against a Man-in-the-middle (MITM) attack, whereby an observer may actively or passively intercept (or possibly relay and modify) the communication between devices, which would defeat the desired goal of establishing a secure channel between two users who otherwise trust each other and their devices.
+An eavesdropper intruding into the devices involved or compromising either of the users of the devices in the pairing is outside of the attacker model.
+
+The risk of eavesdropping, in our view, can then be directly quantified in terms of the leakage to outside observers of the communication channels used.
+In the case of device-controlled pairing with a high bandwidth channel we can employ strong cryptographic primitives (e.g. Diffie-Hellman) to negate such leakage.
+As a last resort, we can attempt to make interception of leaking signals very hard by raising the complexity and frequency of signals.
+Because of the aspect this is a security property that cannot be proven using the formal methods we are used to.
+In all cases we prefer minimal leakage within a certain physical radius from the devices.
 
 Our considerations for these assessments are as follows:
-%\begin{itemize}
-The shaking of two phones can incur subtle signals to the accelerometers of the mobile devices, which is hard to observe without having access to the accelerometer data of a device that went through the same shaking pattern.
-Using a high-speed camera or similar visual observation of the pairing process does not reveal these subtle signals to an observer.
-Graphical passwords may be observed by an outside attacker, the different methods within this category may be vulnerable to a straightforward replay attack while others may be randomized and require several observations before the entire secret is recovered.
-Image comparison is vulnerable to the same kind of observation, but the observed information may only be used in one and the same session and is thus not transferable to a straightforward replay attack.
-Blinking lights are similarly vulnerable to eavesdropping by an observer, since the light emitted by LED diodes is very bright in a certain light spectrum band, which can be clearly observed at a distance.
-Infrared LEDs exhibit the same problem to a worse degree.
-HAPADEP makes use of audio signals, and is therefore susceptible to eavesdropping by conventional surveillance methods.
-Observing a Seeing is Believing pairing may similarly reveal the secret information that is communicated, but depending on whether this is user-controlled or device-controlled, these signals may transmit information with a comparatively high bandwidth, so that observation is the least practical from the class of pairing methods susceptible to observation.
+\begin{itemize}
+	\item The shaking of two phones can incur subtle high-frequency signals to the accelerometers of the mobile devices, which is hard to observe without having access to the accelerometer data of a device that went through the same shaking pattern.
+	Using a high-speed camera or similar visual observation of the pairing process does not reveal these subtle signals to an observer.
+	We can use the signals to do cryptographic key verification rather than key negotiation.
+
+	\item Graphical passwords may be observed by an outside attacker, the different methods within this category may be vulnerable to a straightforward replay attack while others may be randomized and require several observations before the entire secret is recovered. In practice users are not willing to bring cryptography into the picture.
+	\item Image comparison is vulnerable to the same kind of observation, but the observed information may only be used in one and the same session and is thus not transferable to a straightforward replay attack.
+	In the naive implementation users are still involved and cryptography is not, but the images can also be used to do cryptographic key verification rather than key negotiation.
+	\item Blinking lights are similarly vulnerable to eavesdropping by an observer, since the light emitted by LED diodes is very bright in a certain light spectrum band, which can be clearly observed at a distance. But devices can employ some cryptographic primitives and signal complexity to defend against this.
+	Infrared LEDs exhibit the same leakage problem to a worse degree, but can also guard against it with cryptography and signal complexity.
+	\item HAPADEP makes use of audio signals, and is therefore susceptible to eavesdropping by conventional surveillance methods. Cryptographic primitives can be employed, as can signal complexity.
+	\item Observing a Seeing is Believing pairing may similarly reveal the secret information that is communicated. A device-controlled pairing can secure against this with cryptography and signal complexity.
+\end{itemize}
 
 In conclusion, we propose the following leakage assessment.
 
-\begin{tabular}{c|c}
-	Technique & Leakage \\
+\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+	Technique & Leakage radius & Crypto & Signal complexity \\
 	\hline
-	Shake well before use & Low \\
-	Seeing is Believing & Low \\
-	Graphical passwords & Low \\
-	Image comparison & Medium \\
-     Blinking Lights & Medium \\
-     HAPADEP & Medium \\
-	Infrared & High \\
+	  Seeing is Believing & Low & Yes & High \\
+	Shake well before use & Low & Yes & High \\
+    	  Graphical passwords & Low & No & Medium \\
+  Blinking Lights & Medium & Yes & High \\
+	 HAPADEP & Medium & Yes & High \\
+	Image comparison & Medium & No & Medium\\
+	Infrared & High & Yes & High \\
 \end{tabular}
+\end{footnotesize}
 
-
-%\end{itemize}
-
-Another factor at play in the security of pairing in practice is the length of the secret message that is agreed upon through the chosen channel, i.e. \emph{key length}.
-Since none of the techniques considered define a required minimal or maximal key length, this aspect does not relate to the pairing methods investigated.
-In effect, we are free to choose the strength of the used key independently of the chosen method of pairing.
+%Another factor at play in the security of pairing in practice is the length of the secret message that is agreed upon through the chosen channel, i.e. \emph{key length}.
+%Since none of the techniques considered define a required minimal or maximal key length, this aspect does not relate to the pairing methods investigated.
+%In effect, we are free to choose the strength of the used key independently of the chosen method of pairing.
 
 \subsection{Usability assessment}
 \label{ssec:usability_assessment}
@@ -265,12 +276,15 @@ They identify the distinction between Device Controlled (DC) and User Controlled
 
 \section{Design}
 \label{sec:design}
+%TODO: We do not have an implementation just yet.
+In line with the delivered goals of this project, we have drafted a proof of concept Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
+The design makes use of 2D bar codes (specifically, QR codes) to transmit and receive information, and to this end the open source \textit{android-quick-response-code}\cite{aqrc} library.
+This communication channel is used to do a Diffie-Hellman (DH) key exchange, which is converted to a passphrase to establish a conventional PIN-based Bluetooth connection pairing.
 
-TODO: We do not have an implementation just yet.
-We will sketch a preliminary design for a Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
-The proposed design will make use of 2D bar codes (specifically, QR codes) to transmit and receive information, and to this end the open source ZXING or ZBar Java libraries will be likely used.
-This communication channel will be used to do a Diffie-Hellman (DH) key exchange, which is converted to a PIN code to establish a conventional PIN-based Bluetooth connection pairing.
-The conversion will use a custom hash function that uses the binary data that was agreed upon out of band in a regular Simple Secure Pairing (SSP) for Bluetooth 2.1 and higher, or used to derive a PIN code for legacy Bluetooth device pairing.
+%The application allows two Android devices to agree upon the same key 
+
+Although the Bluetooth 2.0 specification defines the possibility to do a Bluetooth pairing using Out-of-Band data, the API calls to do this are unfortunately not public on all versions of Android, and as such no programmatically portable way to complete a pairing is available on the platform.
+%The conversion will use a custom hash function that uses the binary data that was agreed upon out of band in a regular Simple Secure Pairing (SSP) for Bluetooth 2.1 and higher, or used to derive a PIN code for legacy Bluetooth device pairing.
 
 \subsection{Overview}
 \label{ssec:overview}
