@@ -68,7 +68,7 @@ This serves as a case study and a convenient platform for discussing the securit
 
 TODO: Add more details perhaps (maybe a picture?).
 
-In this section we discuss a few general ways of accomplishing the mutual authentication of two devices assuming a suitable OOB channel is in place.
+In this section we discuss two general ways of accomplishing the mutual authentication of two devices assuming a suitable OOB channel is in place.
 These protocols determine the content of the information being exchanged without relying too much on the particular channel.
 Note, however, that this does not mean that every, or even most, of the techniques described in the next section use one of these protocols.
 Many of those exploit, or are limited by, the particular characteristics of their respective representations and/or OOB channels.
@@ -154,8 +154,7 @@ However, these have slightly weaker security guarantees~\cite{saxena2008automate
 
 \section{Secure device pairing methods}
 \label{sec:secure_device_pairing_methods}
-
-TODO: Extend the explanations and add a few more techniques.
+%TODO: Extend the explanations and add a few more techniques.
 
 In this section we describe several pairing methods proposed in the literature.
 
@@ -265,7 +264,26 @@ Also, the differentiation between long and short presses on a given point can le
 \section{Assessment of the state-of-the-art}
 \label{sec:assessment_of_the_state_of_the_art}
 
+\subsection{Taxonomy}
 In this section we summarize our assessments of the security and usability of different pairing methods.
+We can organise the pairing methods we reviewed into categories \emph{human-assisted channel}, \emph{device-controlled channel} and \emph{sensor syncrhonisation}.
+
+% table squishing
+%\hspace{-3em}
+%\begin{footnotesize}
+\begin{tabular}{c|c|c|c}
+	Technique & HAC & DCC & SS \\
+	\hline
+	  Seeing is Believing &  & \checkmark &   \\
+	Shake well before use &  &  & \checkmark \\
+    	  Graphical passwords & \checkmark &  &  \\
+	   Blinking Lights & \checkmark & \checkmark & \\
+	 HAPADEP &  & \checkmark & \checkmark \\
+	Image comparison & \checkmark &  & \\
+	Infrared &  & \checkmark &  \\
+\end{tabular}
+%\end{footnotesize}
+%\hspace{3em}
 
 \subsection{Security assessment}
 \label{ssec:security_assessment}
