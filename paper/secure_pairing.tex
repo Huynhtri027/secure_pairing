@@ -48,14 +48,14 @@ Overall, there are many such OOB channels, some of which we shall discuss in sub
 One problem with such channels is that they often rely on a certain common set of interfaces.
 However, interface-wise almost no two devices are alike and it is common for two very different devices to need a secure communication channel.
 For instance, a recent mobile phone might have a (virtual) keyboard, a camera and a smattering of sensors.
-A simple wireless bluetooth headset, however, likely has almost none of these things and is probably limited to just communicating over a wireless channel.
+A simple wireless Bluetooth headset, however, likely has almost none of these things and is probably limited to just communicating over a wireless channel.
 This makes establishing an OOB channel between such disparate devices a tricky endeavour.
 
 There are two elements to a secure pairing scheme.
 Essentially, we can often separate the content of the communication and the method of communication.
 The content is determined primarily by the protocol, the method entails the way in which certain interfaces are used in order to use this protocol.
 Most of our focus will be on the latter, since the protocols are typically not very complex.
-We will mention, however, some of the common protocols used for establing a secure pairing.
+We will mention, however, some of the common protocols used for establishing a secure pairing.
 
 We structure our paper as follows.
 We start off with a survey of the protocols and techniques used in secure device pairing.
@@ -334,7 +334,8 @@ Also, the differentiation between long and short presses on a given point can le
 In this section we summarize our assessments of the classification, security and usability of different pairing methods.
 
 \subsection{Classification}
-We can organise the pairing methods we reviewed into classes \emph{human-assisted channel}, \emph{device-controlled channel} and \emph{sensor syncrhonisation}.
+A fine-grained classification of pairing methods is available in the research literature~\cite{chong2012usability}, but these considerations are mostly contextual and to a large extent outside the scope of our specific interests of usability and security.
+We can broadly classify the pairing methods we reviewed into categories \emph{human-assisted channel}, \emph{device-controlled channel} and \emph{sensor synchronisation}.
 
 % table squishing
 %\hspace{-3em}
@@ -361,7 +362,7 @@ It makes little sense to evaluate the security of device pairing methods out of 
 As a cost consideration it is often unfeasible to add more communication channels to provide an out-of-band channel for more secure pairing: the topic is in fact characterised by elegant solutions to the pairing problem by using communication channels that already exist in the devices.
 
 The assessment of what is secure is therefore based on the attacker model.
-Secure pairing methods try to defend against a Man-in-the-middle (MITM) attack, whereby an observer may actively or passively intercept (or possibly relay and modify) the communication between devices, which would defeat the desired goal of establishing a secure channel between two users who otherwise trust each other and their devices.
+Secure pairing methods using an out-of-band channel try to defend against a Man-in-the-middle (MITM) attack, whereby an observer may actively or passively intercept (or possibly relay and modify) the communication between devices, which would defeat the desired goal of establishing a secure channel between two users who otherwise trust each other and their devices.
 An eavesdropper intruding into the devices involved or compromising either of the users of the devices in the pairing is outside of the attacker model.
 
 The risk of eavesdropping can be quantified in terms of the leakage to outside observers of the communication channels used.
@@ -400,7 +401,7 @@ We use three metrics, namely: the estimated \emph{leakage} in terms of the radiu
 	  VIC & Low & Yes & High \\
 	Shake well before use & Low & Yes & High \\
 	 HAPADEP & Medium & Yes & High \\
-  Blinking Lights & Medium & Yes & Medium \\
+  Blinking Lights & Medium & Yes & Low \\
 	Image comparison & Medium & Yes & Medium\\
     	  Graphical passwords & Medium & No & Medium \\
 	Infrared & High & Yes & Low \\
@@ -408,7 +409,7 @@ We use three metrics, namely: the estimated \emph{leakage} in terms of the radiu
 \end{footnotesize}
 \hspace{2em}
 
-Based on this classification, we summarily conclude that \textit{Seeing is Believing} and \textit{Shake well before use} have the best overall security properties in terms of leakage, enabling of cryptography and signal complexity.
+Based on this classification, we summarily conclude that the two variants of \textit{Seeing is Believing} and \textit{Shake well before use} have the best overall security properties in terms of leakage, enabling of cryptography and signal complexity.
 
 %Another factor at play in the security of pairing in practice is the length of the secret message that is agreed upon through the chosen channel, i.e. \emph{key length}.
 %Since none of the techniques considered define a required minimal or maximal key length, this aspect does not relate to the pairing methods investigated.
@@ -417,24 +418,23 @@ Based on this classification, we summarily conclude that \textit{Seeing is Belie
 \subsection{Usability assessment}
 \label{ssec:usability_assessment}
 
-%TODO: Extend explanations and add more different usability properties.
-
-Prior research into the usability of the secure pairing methods found in the literature~\cite{kumar2009comparative} established the System Usability Score (SUS) for the considered pairing methods, as well as measuring the perceived security and the time and success rate to complete the task of pairing by observing a group of 22 test subjects interacting with test impelementations in a controlled environment.
-
+\subsubsection{System Usability Scores (SUS)}
+Prior research into the usability of the secure pairing methods found in the literature~\cite{kumar2009comparative} established the System Usability Score (SUS) for the considered pairing methods, as well as measuring the perceived security and the time and success rate to complete the task of pairing by observing a group of 22 test subjects interacting with test implementations in a controlled environment.
 The results of this study show that of the methods considered in this summary, PIN and image comparison methods have the best scores in every category.
 Blinking lights takes the longest time to complete, has a relatively low SUS score and the lowest task completion rate.
-
-Seeing is Believing has a relatively high task completion rate but on average takes a long time to complete.
-Its established SUS score is about 50\% and the perceived security is about 60\% (unfortunately the data is only presented in a 3d graph in the paper making the exact values hard to read).
-
 Shake well before use was not considered in this usability study.
 
+Our intended method, Seeing is Believing, has a relatively high task completion rate but on average takes a long time to complete.
+Its established SUS score is about 50\% and the perceived security is about 60\% (unfortunately their data is only presented in a graph in the paper making the exact values hard to read).
+
+\subsubsection{Rushing user}
 In a similar study \cite{kobsa2009serial} some of the same authors establish the resistance of pairing methods against so-called \textit{rushing user} behaviour.
-The authors also recognize the distinction between device-controlled and user-assisted channels for pairing and concluded that the user-assisted pairing methods are more succeptible to the \textit{rushing user} behavior.
+The authors also recognize the distinction between device-controlled and user-assisted channels for pairing and concluded that the user-assisted pairing methods are more susceptible to the \textit{rushing user} behavior.
+
+\subsubsection{}
 
 \section{Design}
 \label{sec:design}
-%TODO: We do not have an implementation just yet.
 In line with the deliverables of this project, we have drafted a proof of concept implementation of a Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
 The design makes use of 2D bar codes (specifically, QR codes) to transmit and receive information, using the open source \textit{android-quick-response-code}\cite{aqrc} library.
 This communication channel is used to do a Diffie-Hellman (DH) key exchange, which is converted to a passphrase which can be used to do a conventional PIN-based Bluetooth connection pairing.
@@ -443,7 +443,6 @@ Although the Bluetooth 2.0 specification defines the possibility to do a Bluetoo
 
 \subsection{Overview}
 \label{ssec:overview}
-%TODO: We need an implementation first.
 The main application allows users to configure their devices to either initiate or receive a pairing request.
 In both cases the clients generate their half of a Diffie-Hellman key exchange.
 Once the receiver is done it will switch to sender mode, and the initiator will switch to receiver mode after the user confirms by pressing a button.
@@ -451,7 +450,6 @@ This is done by stacking Android \textit{Activities}, launching one and queueing
 
 \section{Conclusion}
 \label{sec:conclusion}
-%TODO: To be done after the implementation section is finished.
 The QR code mechanism allows us to establish Diffie-Hellman keys with reasonable length. In our implementation we chose a 2048 bit modulus, which is still considered secure for the foreseeable future according to the recently updated research survey at \textit{keylength.com}\cite{keylengthdotcom}.
 
 The implementation work does show that the method is usable in practice, and we can conclude mobile devices equipped to scan and display QR codes are enabled to do strong key negotiation using this out-of-band channel.
