@@ -480,18 +480,26 @@ The article concludes expressing interest in another option: using barcodes.
 
 \section{Design}
 \label{sec:design}
-In line with the deliverables of this project, we have drafted a proof of concept implementation of a Seeing is Believing (SIB) secure pairing solution for Android mobile devices.
-The design makes use of 2D bar codes (specifically, QR codes) to transmit and receive information, using the open source \textit{android-quick-response-code}\cite{aqrc} library.
-This communication channel is used to do a Diffie-Hellman (DH) key exchange, which is converted to a passphrase which can be used to do a conventional PIN-based Bluetooth connection pairing.
+In line with the deliverables of this project, we have drafted a proof of concept implementation of a Seeing is Believing (SiB) secure pairing solution for Android mobile devices.
+The design makes use of 2D bar codes (specifically, QR codes) to transmit and receive information, using the open source \textit{android-quick-response-code}\cite{aqrc} and \textit{zxing}\cite{zxing} libries.
+We display a QR code on the first device, and scan it on the second device, and the other way around.
+This creates a channel with reasonably high bandwidth.
+A QR code can contain up to 1264 ASCII characters, scanning a QR code typically takes a couple of seconds. 
+This channel can be eavesdropped by anyone within visual range of the display of the device.
+However, in our opinion it is very difficult to perform a MitM attack without the user(s) noticing, because the devices have to be quite close (around 10 to 50 cm) to eachother for the QR-code scanning to succeed.
 
-Although the Bluetooth 2.0 specification defines the possibility to do a Bluetooth pairing using Out-of-Band data, the API calls to do this are unfortunately not public on all versions of Android, and as such no programmatically portable way to complete a pairing is available on the platform.
+Because of the reasonably high bandwidth and the aforementioned properties of the channel, we decided to implement a Diffie-Hellman key exchange to establish a shared secret. The Diffie-Hellman protocol is considered secure against eavesdroppers.
+The resulting shared secret is then converted to a PIN-code which can be used to do a conventional PIN-based Bluetooth connection pairing.
+
+Although the Bluetooth 2.0 specification defines the possibility to do a Bluetooth pairing using Out-of-Band data, the bluetooth API of Android does not support this for third-party applications. Android implements a version of SAS, where the user is asked to compare two 6-digit numbers shown by the devices.
 
 \subsection{Overview}
 \label{ssec:overview}
 The main application allows users to configure their devices to either initiate or receive a pairing request.
 In both cases the clients generate their half of a Diffie-Hellman key exchange.
 Once the receiver is done it will switch to sender mode, and the initiator will switch to receiver mode after the user confirms by pressing a button.
-This is done by stacking Android \textit{Activities}, launching one and queueing another to run when the primary activity has finished.
+
+The userinterface shown in figure \ref{figui} shows the steps involved in executing a succesfull key exchange.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -518,6 +526,7 @@ The implementation work does show that the method is usable in practice, and we 
 \caption{Receiving a DH key exchange via QR codes. The device switch roles after detecting the initiator.}
 \end{subfigure}
 \caption{The prototype in use.}
+\label{figui}
 \end{figure}
 
 
