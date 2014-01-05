@@ -21,7 +21,15 @@
 \maketitle
 
 \begin{abstract}
-    TODO: Will be written after everything is finished. Such is the nature of abstracts.
+
+Securely pairing two devices needing to communicate over a wireless channel is interesting in a world where such devices are ever more prevalent.
+The lack of an existing external security infrastructure only serves to make the problem more difficult.
+Over the years, several techniques have been proposed to solve this problem.
+In particular, such solutions require the use and availability of out-of-band channels.
+In this paper we survey and assess a range of different techniques for establishing a secure pairing between devices.
+These include protocols that do not require a specific out-of-band channel and also techniques for using specific out-of-band channels.
+Furthermore, we create a proof-of-concept implementation for a technique that uses the displaying and reading of QR codes as an out-of-band channel.
+
 \end{abstract}
 
 \section{Introduction}
@@ -67,8 +75,6 @@ This serves as a case study and a convenient platform for discussing the securit
 
 \section{Cryptographic protocols for secure device pairing}
 \label{sec:cryptographic_protocols_for_secure_device_pairing}
-
-TODO: Add more details perhaps (maybe a picture?).
 
 In this section we discuss two general ways of accomplishing the mutual authentication of two devices assuming a suitable OOB channel is in place.
 These protocols determine the content of the information being exchanged without relying too much on the particular channel.
@@ -394,7 +400,6 @@ In the cases where humans assist in forming the channel we can further divide be
 \subsection{Security assessment}
 \label{ssec:security_assessment}
 
-%TODO: Add assessments of different security properties.
 It makes little sense to evaluate the security of device pairing methods out of context: different devices make use of different communication channels, some of which are inherently harder to secure against eavesdropping.
 As a cost consideration it is often unfeasible to add more communication channels to provide an out-of-band channel for more secure pairing: the topic is in fact characterised by elegant solutions to the pairing problem by using communication channels that already exist in the devices.
 
