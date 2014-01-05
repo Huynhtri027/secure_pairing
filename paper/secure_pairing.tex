@@ -27,10 +27,9 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The proliferation of devices, mobile or otherwise, communicating over wireless channels leads to interesting problems.
-In particular, it is very easy to eavesdrop on and manipulate said, making man-in-the-middle (MitM) attacks a relevant threat~\cite{kumar2009comparative}.
-Which is a risk from a security point of view.
-The obvious way to combat this threat is to secure this wireless channel.
+The proliferation of devices, mobile and otherwise, communicating over wireless channels leads to the problem of establishing a secure connection between the devices.
+In particular, it is very easy to eavesdrop on and manipulate in wireless channels, making man-in-the-middle (MitM) attacks a relevant threat~\cite{kumar2009comparative}.
+To eliminate the threat of MitM attacks, one would wish to establish a secure wireless channel.
 This is where \emph{secure device pairing} comes in.
 
 Secure device pairing (or secure pairing, for short) is the process of creating a secure channel between two devices that have no previous security context.
@@ -47,14 +46,14 @@ This channel is very hard to interfere with for an attacker without the human us
 Overall, there are many such OOB channels, some of which we shall discuss in subsequent sections in the paper.
 One problem with such channels is that they often rely on a certain common set of interfaces.
 However, interface-wise almost no two devices are alike and it is common for two very different devices to need a secure communication channel.
-For instance, a recent mobile phone might have a (virtual) keyboard, a camera and a smattering of sensors.
+For instance, a recent mobile phone might have a (virtual) keyboard, a camera and a number of other sensors.
 A simple wireless Bluetooth headset, however, likely has almost none of these things and is probably limited to just communicating over a wireless channel.
-This makes establishing an OOB channel between such disparate devices a tricky endeavour.
+This makes establishing an OOB channel between such different devices challenging.
 
 There are two elements to a secure pairing scheme.
 Essentially, we can often separate the content of the communication and the method of communication.
 The content is determined primarily by the protocol, the method entails the way in which certain interfaces are used in order to use this protocol.
-Most of our focus will be on the latter, since the protocols are typically not very complex.
+Most of our focus will be on the latter, since the protocols are typically not very elaborate.
 We will mention, however, some of the common protocols used for establishing a secure pairing.
 
 We structure our paper as follows.
@@ -161,7 +160,7 @@ However, these have slightly weaker security guarantees~\cite{saxena2008automate
 
 In this section we describe several pairing methods proposed in the literature.
 We can distinguish different kinds of secure pairing methods.
-Mostly, they differ in the amount of human intervention necessary and the OOB channels they use.
+Mostly, they differ in the amount of human interaction necessary and the OOB channels they use.
 Some require only some preliminary setup from the user, others require the user to participate and other ones do not require user intervention at all.
 The OOB channels can vary, but some manifestation of the visual channel seems to be the most popular choice.
 
@@ -171,8 +170,7 @@ An early approach to the problem of secure pairing involves image comparison.
 On both devices an image of the OOB data is shown and the user is asked to compare both images.
 The underlying protocol is the one described in \autoref{ssec:talking_to_strangers}.
 Examples are \textit{Snowflake}~\cite{goldberg1996visual}, \textit{Random Arts Visual Hash}~\cite{perrig1999hash} and \textit{Colorful Flag}~\cite{dohrmann2002public}.
-These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets.
-However, all modern smartphones have such a display and for that reason the technique is not without its merits.
+These methods require both devices to have a display with a reasonable resolution, making it impractical for devices like bluetooth headsets, but very suitable for modern mobile phones.
 
 \subsection{Seeing is Believing}
 In Seeing-is-Believing (SiB)~\cite{mccune2005seeing} camera phones are used to set up a pairing between two devices.
@@ -208,7 +206,7 @@ Of course, we need both sides to be able to authenticate to do mutual authentica
 \subsection{VIC}
 \label{ssec:vic}
 
-VIC~\cite{saxena2006secure}, or Visual authentication based on Integrity Checking, is meant as an upgrade to SiB, which we saw in the last section.
+VIC~\cite{saxena2006secure}, or Visual authentication based on Integrity Checking, is meant as an successor of SiB, which we saw in the last section.
 Recall that we noted that mutual authentication is only possible in SiB when both devices are equipped with cameras and displays (see \autoref{table:sib}).
 In VIC we achieve mutual authentication even in the cases where SiB could only give one \emph{presence}.
 However, we do need an additional step of user interaction.
@@ -224,7 +222,9 @@ VIC works as follows, where $h$ is a hash function and $K_A, K_B$ are A's and B'
     \item $A$: prompt the user as to whether $B$ accepted or not. $A$ accepts if the user indicated that $B$ accepted, reject and abort otherwise.
 \end{enumerate}
 
-It is not hard to see that indeed this provides mutual authentication even in the camera-display scenario.
+%It is not hard to see that indeed this provides mutual authentication even in the camera-display scenario.
+
+% TODO: de zin hierboven herschrijven, ref naar orig paper?
 
 % In this method one device uses its camera to take a snapshot of a barcode encoding of, for example, the public key of the other device.
 % The minimum set of interfaces for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
@@ -277,25 +277,25 @@ Its intended use is in situations where one may not have an available wireless c
 It can use the audio channel for all messages instead.
 That said, it can also be used in such a way that only some messages are sent using this audio channel, everything else can go via wireless.
 
-For transmitting any message in general over the audio channel we just apply a special codec to the message and out the result over the speaker.
+For transmitting any message in general over the audio channel, a special codec is applied to the message and output the result over the speaker.
 The receiver then decodes whatever it gets on its microphone back to the original message.
-Protocol-wise we use a system that is very similar to LaC.
-First we send the respective public keys over the audio channel by encoding the key to audio, outputting it over the speaker and decoding it back to its original form on the receiver's end.
-Then we verify that this went correctly by vocalizing the public keys on both ends, like in LaC.
-The user then verifies that these two vocalized keys, or hashes of keys, are indeed the same.
+Protocol-wise it uses a system that is very similar to LaC.
+First the respective public keys are sent over the audio channel by encoding the key to audio, outputting it over the speaker and decoding it back to its original form on the receiver's end.
+Then the public keys are vocalized on both devices, similiar to LaC, to verify the keyexchange was done correctly.
+The user verifies that these two vocalized keys, or hashes of keys, are indeed the same.
 
 \subsection{Graphical passwords}
 \label{ssec:graphical_passwords}
 
-Graphical passwords are somewhat different from what we have seen so far.
+Graphical passwords are somewhat different from the previous methods.
 As the name implies it entails the entering of passwords in a graphical manner as opposed to the usual practice of entering PINs or alphanumeric passwords in general.
 The idea is that these graphical passwords can provide a similar level of security while being more memorable.
 Do note that these techniques do not necessarily use an OOB channel, they really are passwords in the more traditional sense, which is really what sets them apart from some of the other techniques discussed in this paper.
 
 In \cite{schaub2013exploring} five different types of graphical passwords are discussed: \emph{Pass-Go}, \emph{UYI}, \emph{TAPI}, \emph{CCP} and \emph{MIBA}.
 As an addition you might consider the Android gesture swipe unlocking scheme as a more recent example of such a system.
-However, that particular scheme suffers from problems in terms of predictability of patterns, lack of possibilities, easy should surfing and even smudge attacks~\cite{aviv2010smudge}.
-Whatever the case, the five techniques mentioned in \cite{schaub2013exploring} seem to cover quite a few different types of graphical passwords and we shall reproduce some of the descriptions with their respective characteristics here.
+However, that particular scheme suffers from problems in terms of predictability of patterns, lack of possibilities, easy shoulder surfing and even smudge attacks~\cite{aviv2010smudge}.
+The five techniques mentioned in \cite{schaub2013exploring} seem to cover quite a few different types of graphical passwords and we shall reproduce some of the descriptions with their respective characteristics here.
 
 \subsubsection{Pass-Go}
 \label{sssec:pass_go}
@@ -309,9 +309,9 @@ Also, the security can be enhanced by coloring the lines and dots differently.
 \subsubsection{UYI}
 \label{sssec:uyi}
 
-UYI~\cite{hayashi2008use} is a simple scheme where the user has to pick a picture out of a number of distinct pictures.
+UYI~\cite{hayashi2008use} is a scheme where the user has to pick a picture out of a number of distinct pictures.
 This is done several times in succession.
-Also, the pictures are presented in a somewhat abstracted version such that the user that set the key can recognize the picture but an adversary has a harder time.
+The pictures are presented in a somewhat abstracted version such that the user that set the key can recognize the picture, but it makes it more difficult for an adversary.
 The amount of challenges and the amount of options determine the security of this scheme.
 Furthermore there must be a very large set of pictures to choose from.
 
@@ -325,7 +325,7 @@ It consists of a grid of 16 icons where each icon is split into four parts, this
 \subsubsection{CCP}
 \label{sssec:ccp}
 
-CCP~\cite{chiasson2007graphical} entails presenting the user with subsequent pictures where the user must click on a certain point in said image.
+CCP~\cite{chiasson2007graphical} entails presenting the user with subsequent pictures where the user must click on a certain point in the picture.
 Depending on the particular point being clicked on we get a different subsequent picture.
 The password then is just a sequence of pictures with their respective correct click points.
 If the user clicks on the wrong point a different image is presented than expected and thus this serves as a kind of feedback to the user.
@@ -334,7 +334,7 @@ If the user clicks on the wrong point a different image is presented than expect
 \label{sssec:miba}
 
 MIBA~\cite{ritter2013miba} is a recent scheme that is very similar to CCP but with the addition of several new features.
-For one, it has a grid overlay to help the user with selecting click points.
+It has a grid overlay to help the user with selecting click points.
 Also, the differentiation between long and short presses on a given point can lead to different passwords in this scheme which aids in improving the password space.
 
 \subsubsection{Password strength}
@@ -371,7 +371,7 @@ In this section we summarize our assessments of the classification, security and
 
 \subsection{Classification}
 A fine-grained classification of pairing methods is available in the research literature~\cite{chong2012usability}, but these considerations are mostly contextual and to a large extent outside the scope of our specific interests of usability and security.
-We can broadly classify the pairing methods we reviewed into categories \emph{human-assisted channel}, \emph{device-controlled channel} and \emph{sensor synchronisation}.
+We can broadly classify the pairing methods into the categories \emph{human-assisted channel}, \emph{device-controlled channel} and \emph{sensor synchronisation}.
 In the cases where humans assist in forming the channel we can further divide between \textit{compare \& confirm} and \textit{compare \& select} approaches.
 
 % table squishing
@@ -403,9 +403,9 @@ Secure pairing methods using an out-of-band channel try to defend against a Man-
 An eavesdropper intruding into the devices involved or compromising either of the users of the devices in the pairing is outside of the attacker model.
 
 The risk of eavesdropping can be quantified in terms of the leakage to outside observers of the communication channels used.
-In the case of device-controlled pairing with a high bandwidth channel we can employ cryptographic primitives to negate such leakage.
+In the case of device-controlled pairing with a high bandwidth channel we can employ cryptographic primitives to mitigate such leakage.
 As a last resort, we can attempt to make interception of leaking signals very hard by raising the complexity and frequency of signals.
-This is a property that we found difficult to quantify using the formal methods in cryptography we are used to.
+This is a property that we found difficult to quantify using formal methods in cryptography.
 In all cases we prefer minimal leakage within a certain physical radius from the devices.
 
 Our considerations for these assessments are as follows:
@@ -414,8 +414,8 @@ Our considerations for these assessments are as follows:
 	Using a high-speed camera or similar visual observation of the pairing process does not reveal these subtle signals to an observer.
 	We can use the signals to do verification of shared secrets agreed upon in-band.
 	\item Graphical passwords may be observed by an outside attacker, the different methods within this category may be vulnerable to a straightforward replay attack while others may be randomized and require several observations before the entire secret is recovered.
-	\item Image comparison is vulnerable to the same kind of observation, but the observed information may only be used in one and the same session and is thus not transferable to a straightforward replay attack.
-	The images can be auto-generated from shared secrets, to let users do verification of cryptographic keys established in-band to negate this leakage.
+	\item Image comparison is vulnerable to the same kind of observation, but the observed information may only be used in the same session and is thus not usable for a replay attack.
+	The images can be auto-generated from shared secrets, to let users do verification of cryptographic keys established in-band to mitigate this leakage.
 	\item Blinking lights are vulnerable to eavesdropping by an observer, since the light emitted by LED diodes is very bright in a certain light spectrum band, which can be clearly observed at a distance.
 	Infrared LEDs exhibit the same leakage problem to a worse degree.
 	Conversely, when there are multiple light sources active in the same part of the \textit{visible} spectrum it becomes more difficult to observe at a distance which of them are on or off. This is not the case with infrared signals which are meant to be machine-readable.
