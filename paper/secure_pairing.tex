@@ -193,7 +193,7 @@ If only one device has a camera we need to affix a barcode containing the necess
 In this case we can still authenticate the camera 
 There are a few more combinations of interfaces to be examined and for the sake of comprehensiveness we shall reproduce in \autoref{table:sib} the full table of combinations of interfaces as found in~\cite{mccune2005seeing}.
 
-\begin{figure}[h]
+\begin{table}[h]
     \begin{tabular}{ c | c c c c }
       X/Y  & CD & C & D & N \\ \hline
         CD & $\checkmark$ & $\checkmark^*$ & $\checkmark$ & $\checkmark^*$ \\
@@ -205,7 +205,7 @@ There are a few more combinations of interfaces to be examined and for the sake 
     \small{Check whether X can authenticate to Y, C = camera, D = display, CD = both, N = neither, $\checkmark$ = strong authentication possible, $\checkmark^*$ = affixed barcode necessary, presence = can only verify the presence of a device, X = no authentication possible.}
     \caption{Authentication capabilities}.
     \label{table:sib}
-\end{figure}
+\end{table}
 
 Of course, we need both sides to be able to authenticate to do mutual authentication, i.e., the CD - CD combination.
 
@@ -361,7 +361,7 @@ Also, the differentiation between long and short presses on a given point can le
     \end{tabular}
     }
     \label{fig:pw}
-    \caption{Password strength graphical passwords}
+    \caption{Password strength of graphical passwords}
 \end{table*}
 
 In order to fully appreciate the relative password strenghts of the different graphical password techniques described in this section we will reproduce the work done in~\cite{schaub2013exploring} in 
@@ -377,23 +377,32 @@ In this section we summarize our assessments of the classification, security and
 
 \subsection{Classification}
 A fine-grained classification of pairing methods is available in the research literature~\cite{chong2012usability}, but these considerations are mostly contextual and to a large extent outside the scope of our specific interests of usability and security.
-We can broadly classify the pairing methods into the categories \emph{human-assisted channel}, \emph{device-controlled channel} and \emph{sensor synchronisation}.
+We can broadly classify the pairing methods into the categories \emph{human-assisted channel}, \emph{device-controlled channel} and \emph{sensor synchronisation}, as categorised in \autoref{table:classification}.
 In the cases where humans assist in forming the channel we can further divide between \textit{compare \& confirm} and \textit{compare \& select} approaches.
 
 % table squishing
 %\hspace{-3em}
 %\begin{footnotesize}
+\begin{table}[h]
+    \centering
+    \normalsize{
 \begin{tabular}{c|c|c|c}
 	Technique & HAC & DCC & SS \\
 	\hline
-	  Seeing is Believing &  & \checkmark &   \\
-	Shake well before use &  &  & \checkmark \\
-    	  Graphical passwords & \checkmark &  &  \\
-	   Blinking Lights & \checkmark &  & \\
-	 HAPADEP &  & \checkmark & \checkmark \\
 	Image comparison & \checkmark &  & \\
+	  Seeing is Believing &  & \checkmark &   \\
+	   VIC & & \checkmark  & \\
+	   Blinking Lights & \checkmark &  & \\
+	Shake well before use &  &  & \checkmark \\
+	       Loud and Clear & \checkmark & \checkmark & \\
+    	  Graphical passwords & \checkmark &  &  \\
+	 HAPADEP &  & \checkmark & \checkmark \\
 	Infrared &  & \checkmark &  \\
 \end{tabular}
+    }
+    \label{fig:classification}
+    \caption{Classification of pairing methods by attributes `human-assisted', `device-controlled' and `sensor synchronization'}
+\end{table}
 %\end{footnotesize}
 %\hspace{3em}
 
@@ -413,42 +422,52 @@ As a last resort, we can attempt to make interception of leaking signals very ha
 This is a property that we found difficult to quantify using formal methods in cryptography.
 In all cases we prefer minimal leakage within a certain physical radius from the devices.
 
-Our considerations for these assessments are as follows:
+A final metric to consider in the context of security is the robustness of the OOB channel against Denial-of-Service (DoS) attacks, in other words, their availability.
+
+Our considerations for these assessments are as follows, and are summarized in \autoref{table:security_properties}:
 \begin{itemize}
-	\item The shaking of two phones can incur subtle high-frequency signals to the accelerometers of the mobile devices, which is hard to observe without having access to the accelerometer data of a device that went through the same shaking pattern.
-	Using a high-speed camera or similar visual observation of the pairing process does not reveal these subtle signals to an observer.
-	We can use the signals to do verification of shared secrets agreed upon in-band.
-	\item Graphical passwords may be observed by an outside attacker, the different methods within this category may be vulnerable to a straightforward replay attack while others may be randomized and require several observations before the entire secret is recovered.
 	\item Image comparison is vulnerable to the same kind of observation, but the observed information may only be used in the same session and is thus not usable for a replay attack.
 	The images can be auto-generated from shared secrets, to let users do verification of cryptographic keys established in-band to mitigate this leakage.
+	\item Observing a Seeing is Believing pairing may similarly reveal the secret information that is communicated. A device-controlled pairing, such as also happens with Visual authentication based on Integrity Checking pairing (VIC) can secure against this with cryptography and signal complexity.
+	The communication could perhaps be disturbed by bad lighting conditions, like for example a strobe light, making it difficult for the camera's to adjust for light intensity.
 	\item Blinking lights are vulnerable to eavesdropping by an observer, since the light emitted by LED diodes is very bright in a certain light spectrum band, which can be clearly observed at a distance.
 	Infrared LEDs exhibit the same leakage problem to a worse degree.
 	Conversely, when there are multiple light sources active in the same part of the \textit{visible} spectrum it becomes more difficult to observe at a distance which of them are on or off. This is not the case with infrared signals which are meant to be machine-readable.
+	The signal may again be disturbed by extreme lighting conditions such as under a strobe light.
+	\item The shaking of two phones can incur subtle high-frequency signals to the accelerometers of the mobile devices, which is hard to observe without having access to the accelerometer data of a device that went through the same shaking pattern.
+	Using a high-speed camera or similar visual observation of the pairing process does not reveal these subtle signals to an observer.
+	We can use the signals to do verification of shared secrets agreed upon in-band.
+	\item Loud and clear makes itself audible to the user (provided they have normal hearing), and as such also to any eavesdroppers. A man-in-the-middle would need to overpower the original sender in volume, making such tampering evident. A noisy environment would prevent the method from being applied successfully. Because this is a common occurrence, we deem this a low resistance to DoS attacks.
+	\item Graphical passwords may be observed by an outside attacker, the different methods within this category may be vulnerable to a straightforward replay attack while others may be randomized and require several observations before the entire secret is recovered.
 	%This is a user-assisted channel often found on devices without usable input sensors like Bluetooth headsets.
 	The method may also be used to verify shared secrets communicated in-band have not been tampered with.
 	\item HAPADEP makes use of audio signals, and is therefore susceptible to eavesdropping by conventional surveillance methods. It's a device-controlled channel, so cryptographic primitives can be employed, as can signal complexity.
-	\item Observing a Seeing is Believing pairing may similarly reveal the secret information that is communicated. A device-controlled pairing can secure against this with cryptography and signal complexity.
 \end{itemize}
 
-In conclusion, we propose the following leakage assessment.
-We use three metrics, namely: the estimated \emph{leakage} in terms of the radius at which the signals dissipate comparatively; the ability to use strong \emph{cryptographic primitives} over an out-of-band channel or if the method can be used to validate shared secrets agreed upon in-band; and finally, whether the \emph{complexity of the signal} can be practically raised to further thwart eavesdroppers.
+In conclusion, we propose the following metrics for security assessment: the estimated \emph{leakage} in terms of the radius at which the signals dissipate comparatively; the ability to use strong \emph{cryptographic primitives} over an out-of-band channel or if the method can be used to validate shared secrets agreed upon in-band; whether the \emph{complexity of the signal} can be practically raised to further thwart eavesdroppers; and finally, how \emph{robust} the channel is against DoS attacks.
 
 % table squishing
 \hspace{-2em}
-\begin{footnotesize}
-\begin{tabular}{c|c|c|c}
-	Technique & Leakage radius & Crypto & Signal complexity \\
+\begin{table*}[t]
+    \centering
+    \normalsize{
+\begin{tabular}{c|c|c|c|c}
+	Technique & Leakage radius & Crypto & Signal complexity & Robustness \\
 	\hline
-	  Seeing is Believing & Low & Yes & High \\
-	  VIC & Low & Yes & High \\
-	Shake well before use & Low & Yes & High \\
-	 HAPADEP & Medium & Yes & High \\
-  Blinking Lights & Medium & Yes & Low \\
-	Image comparison & Medium & Yes & Medium\\
-    	  Graphical passwords & Medium & No & Medium \\
-	Infrared & High & Yes & Low \\
+	Image comparison & Medium & Yes & Medium & High\\
+     Seeing is Believing & Low & Yes & High & Medium \\
+		     VIC & Low & Yes & High & Medium\\
+	 Blinking Lights & Medium & Yes & Low & High\\
+	Shake well before use & Low & Yes & High & High \\
+	       Loud and Clear & High & No & No & Low
+      Graphical passwords & Medium & No & Medium & High \\
+		 HAPADEP & Medium & Yes & High & Medium \\
+	  Infrared & High & Yes & Low & Medium \\
 \end{tabular}
-\end{footnotesize}
+}
+    \caption{Classification of pairing methods by security properties}
+    \label{table:security_properties}
+\end{table*}
 \hspace{2em}
 
 Based on this classification, we summarily conclude that the two variants of \textit{Seeing is Believing} and \textit{Shake well before use} have the best overall security properties in terms of leakage, enabling of cryptography and signal complexity.
@@ -467,7 +486,7 @@ Blinking lights takes the longest time to complete, has a relatively low SUS sco
 Shake well before use was not considered in this usability study.
 
 Our intended method, Seeing is Believing, has a relatively high task completion rate but on average takes a long time to complete.
-Its established SUS score is about 50\% and the perceived security is about 60\% (unfortunately their data is only presented in a graph in the paper making the exact values hard to read).
+Its established SUS score is about 50\% and the perceived security is about 60\%.
 
 \subsubsection{Rushing user}
 In a similar study \cite{kobsa2009serial} some of the same authors establish the resistance of pairing methods against so-called \textit{rushing user} behaviour.
