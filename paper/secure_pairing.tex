@@ -233,11 +233,9 @@ VIC works as follows, where $h$ is a hash function and $K_A, K_B$ are A's and B'
     \item $A$: prompt the user as to whether $B$ accepted or not. $A$ accepts if the user indicated that $B$ accepted, reject and abort otherwise.
 \end{enumerate}
 
-It is not hard to see that indeed this provides mutual authentication even in the camera-display scenario.
+This indeed provides mutual authentication even in the camera-display scenario.
 The intuition is that we only need one unidirectional visual channel if we use the user as a third party that relays to party A whether party B accepted or not.
 The result of which is that we can get mutual authentication, like in SiB, with less interfaces than SiB due to SiB needing a bidirectional visual channel.
-
-% TODO: de zin hierboven herschrijven, ref naar orig paper?
 
 % In this method one device uses its camera to take a snapshot of a barcode encoding of, for example, the public key of the other device.
 % The minimum set of interfaces for this approach to work is one device with a display, and one with a camera, making it again unsuitable for low-end devices.
