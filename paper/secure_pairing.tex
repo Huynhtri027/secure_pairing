@@ -35,18 +35,21 @@ Furthermore, we create a proof-of-concept implementation for a technique that us
 \section{Introduction}
 \label{sec:introduction}
 
-The proliferation of devices, mobile and otherwise, communicating over wireless channels leads to the problem of establishing a secure connection between the devices.
-In particular, it is very easy to eavesdrop on and manipulate in wireless channels, making man-in-the-middle (MitM) attacks a relevant threat~\cite{kumar2009comparative}.
+The proliferation of electronic devices, mobile and otherwise, communicating over wireless channels leads to the problem of establishing a secure connection between the devices.
+In particular, wireless channels can be eavesdropped and also manipulated with relative ease, making man-in-the-middle (MitM) attacks a relevant threat~\cite{kumar2009comparative}.
 To eliminate the threat of MitM attacks, one would wish to establish a secure wireless channel.
 This is where \emph{secure device pairing} comes in.
 
-Secure device pairing (or secure pairing, for short) is the process of creating a secure channel between two devices that have no previous security context.
+Secure device pairing, secure pairing for short, is the process of creating a secure channel between two devices that have no previous security context.
 That is, a secure pairing scheme needs to be able to provide mutual authentication without relying on external trust anchors.
 Because we cannot rely on an external infrastructure as a basis of trust most of the standard techniques are not easily applicable.
 In particular, there is an need~\cite{kumar2009comparative} to do some part of the communication over an auxiliary channel, so-called out-of-band (OOB) channels.
 These OOB channels have special security properties by virtue of the media over which the data travels~\cite{balfanz2002talking}.
 They may, due to their nature, prevent MitM attacks by providing what is essentially a secure channel.
 Devices can use these methods to agree upon keys out-of-band before communication takes place in-band, or to validate the key agreed upon in-band was not tampered with by a third party.
+Note that we cannot just use the OOB channel for all our communication, we still need in-band communication over the wireless channel.
+This is because OOB channels typically have very low bandwidth.
+Which makes it important for performance reasons that communication over the OOB channel is used sparingly.
 
 These OOB channels are managed by the users themselves and typically rely on human interaction to authenticate the communication over the wireless channel.
 Suppose we use human visual capabilities as an OOB channel, for instance in the case of asking a user to compare images.
@@ -56,7 +59,7 @@ One problem with such channels is that they often rely on a certain common set o
 However, interface-wise almost no two devices are alike and it is common for two very different devices to need a secure communication channel.
 For instance, a recent mobile phone might have a (virtual) keyboard, a camera and a number of other sensors.
 A simple wireless Bluetooth headset, however, likely has almost none of these things and is probably limited to just communicating over a wireless channel.
-This makes establishing an OOB channel between such different devices challenging.
+This makes establishing an OOB channel between such different devices challenging since we lack common interfaces.
 
 There are two elements to a secure pairing scheme.
 Essentially, we can often separate the content of the communication and the method of communication.
