@@ -84,6 +84,8 @@ These protocols determine the content of the information being exchanged without
 Note, however, that this does not mean that every, or even most, of the techniques described in the next section use one of these protocols.
 Many of those exploit, or are limited by, the particular characteristics of their respective representations and/or OOB channels.
 That said, these protocols are useful for achieving mutual authentication in a general way assuming the OOB is suitably capable.
+The particular choice of protocols that we discuss seems representative of the group of secure pairing protocols using OOB channels.
+At least in the sense that our research did not yield protocols that were significantly different to the ones chosen.
 
 \subsection{Talking to Strangers}
 \label{ssec:talking_to_strangers}
@@ -116,8 +118,9 @@ Given addresses $addr_A$ and $addr_B$ for parties $A$ and $B$, their respective 
     \item $B \rightarrow A: addr_B, h(pk_B)$
 \end{enumerate}
 
-After which we can proceed with a standard key exchange protocol (e.g., SSL/TLS).
-This can be done over the wireless channel.
+After which we can proceed with a standard key exchange protocol (e.g., SSL/TLS), the goal of which is typically to get an agreement on some shared (symmetric) key.
+The particulars of such a key exchange protocol we shall not discuss as we consider it to be outside the scope of this paper.
+Do note that this can be done over the wireless channel.
 This works because we have committed in a secure way on the public keys we will be using.
 
 \subsection{Short Authenticated Strings}
@@ -170,9 +173,8 @@ However, these have slightly weaker security guarantees~\cite{saxena2008automate
 In this section we describe several pairing methods proposed in the literature.
 We can distinguish different kinds of secure pairing methods.
 Mostly, they differ in the amount of human interaction necessary and the OOB channels they use.
-Some require only some preliminary setup from the user, others require the user to participate and other ones do not require user intervention at all.
+Some require only some preliminary setup from the user, others require the user to participate and others do not require user intervention at all.
 The OOB channels can vary, but some manifestation of the visual channel seems to be the most popular choice.
-
 
 \subsection{Image comparison}
 An early approach to the problem of secure pairing involves image comparison.
@@ -231,7 +233,9 @@ VIC works as follows, where $h$ is a hash function and $K_A, K_B$ are A's and B'
     \item $A$: prompt the user as to whether $B$ accepted or not. $A$ accepts if the user indicated that $B$ accepted, reject and abort otherwise.
 \end{enumerate}
 
-%It is not hard to see that indeed this provides mutual authentication even in the camera-display scenario.
+It is not hard to see that indeed this provides mutual authentication even in the camera-display scenario.
+The intuition is that we only need one unidirectional visual channel if we use the user as a third party that relays to party A whether party B accepted or not.
+The result of which is that we can get mutual authentication, like in SiB, with less interfaces than SiB due to SiB needing a bidirectional visual channel.
 
 % TODO: de zin hierboven herschrijven, ref naar orig paper?
 
@@ -299,7 +303,9 @@ The user verifies that these two vocalized keys, or hashes of keys, are indeed t
 Graphical passwords are somewhat different from the previous methods.
 As the name implies it entails the entering of passwords in a graphical manner as opposed to the usual practice of entering PINs or alphanumeric passwords in general.
 The idea is that these graphical passwords can provide a similar level of security while being more memorable.
-Do note that these techniques do not necessarily use an OOB channel, they really are passwords in the more traditional sense, which is really what sets them apart from some of the other techniques discussed in this paper.
+Note that these techniques do not necessarily use an OOB channel, they really are passwords in the more traditional sense, which is really what sets them apart from some of the other techniques discussed in this paper.
+However, we can use them in the same way we use PINs for secure pairing, i.e., create a (temporary) password on one device and enter the password on the other device.
+In a sense this uses the human memory as an OOB channel.
 
 In \cite{schaub2013exploring} five different types of graphical passwords are discussed: \emph{Pass-Go}, \emph{UYI}, \emph{TAPI}, \emph{CCP} and \emph{MIBA}.
 As an addition you might consider the Android gesture swipe unlocking scheme as a more recent example of such a system.
