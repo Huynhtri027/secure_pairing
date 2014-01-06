@@ -506,9 +506,14 @@ The userinterface shown in figure \ref{figui} shows the steps involved in execut
 
 \section{Conclusion}
 \label{sec:conclusion}
-The QR code mechanism allows us to establish Diffie-Hellman keys with reasonable length. In our implementation we chose a 2048 bit modulus, which is still considered secure for the foreseeable future according to the recently updated research survey at \textit{keylength.com}\cite{keylengthdotcom}.
+
+
+The QR code mechanism allows us to establish Diffie-Hellman keys with reasonable length. In our implementation we choose a 2048 bit modulus, which is still considered secure for the foreseeable future according to the recently updated research survey at \textit{keylength.com}\cite{keylengthdotcom}.
 
 The implementation work does show that the method is usable in practice, and we can conclude mobile devices equipped to scan and display QR codes are enabled to do strong key negotiation using this out-of-band channel.
+
+The SiB method we implemented is only a prototype, but it demonstrates that using QR codes a keyexchange with sufficient strong keys is feasible. Althought the implementation lacks integration with Bluetooth itself, we consider it practical and sufficiently fast.
+
 
 \newpage
 
